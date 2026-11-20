@@ -72,7 +72,7 @@ FOOT = """</main>
           <li><a href="{base}hormone-replacement-therapy/">Hormone Replacement Therapy</a></li>
           <li><a href="{base}#team">Team</a></li>
           <li><a href="{base}#order">Supplements &amp; Labs</a></li>
-          <li><a href="{base}learn/">Provider Course</a></li>
+          <li><a href="{base}learn/functional-medicine/">Functional Medicine Course</a></li>
           <li><a href="{base}learn/wound-care/">Wound &amp; Foot Care Course</a></li>
         </ul>
       </div>
@@ -99,12 +99,34 @@ document.querySelectorAll('.nav a').forEach(function(a){{a.addEventListener('cli
 """
 
 
+REDIRECT = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{title} | Empowered Health</title>
+<link rel="canonical" href="{canonical}">
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url={target}">
+<script>location.replace("{target}" + location.hash)</script>
+</head>
+<body><p>This page moved to <a href="{target}">{target}</a>.</p></body>
+</html>
+"""
+
+
 def build():
     for src in sorted(SRC.glob("*.html")):
         text = src.read_text()
         header, body = text.split("\n\n", 1)
         meta = dict(line.split(": ", 1) for line in header.splitlines())
         path = meta["path"]
+        if "redirect" in meta:
+            out = OUT / path
+            out.parent.mkdir(parents=True, exist_ok=True)
+            target = meta["redirect"]
+            out.write_text(REDIRECT.format(target=target, title=meta["title"], canonical=SITE_URL + target))
+            print("wrote", out.relative_to(ROOT), "(redirect)")
+            continue
         depth = path.count("/")
         base = meta.get("base") or ("../" * depth if depth else "./")
         canonical = SITE_URL + "/" + (path[: -len("index.html")] if path.endswith("index.html") else path)
