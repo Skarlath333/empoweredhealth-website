@@ -167,7 +167,7 @@ path: learn/index.html
     <p>{len(MODULES)} evidence-focused modules (about {round(total / 60)} hours) for NPs, PAs, physicians and nurses who want to bring root-cause thinking into everyday practice. Every module ends with a plain-language patient handout you can share.</p>
     <div class="actions">
       <a class="btn" href="{MODULES[0]["slug"]}/">Start Module 1</a>
-      <a class="btn ghost light" href="#patients">I'm a patient</a>
+      <a class="btn light" href="#patients">I'm a patient</a>
     </div>
   </div>
 </section>

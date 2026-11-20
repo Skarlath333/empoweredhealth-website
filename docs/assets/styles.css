@@ -246,7 +246,7 @@ section { padding: 88px 0; }
 @media (max-width: 900px) { .lesson-layout { grid-template-columns: 1fr; } .lesson-nav { position: static; } }
 
 /* Provider course additions */
-.btn.ghost.light { color: var(--white); border-color: rgba(255,255,255,.7); }
+.btn.ghost.light { background: transparent; color: var(--white); border-color: rgba(255,255,255,.7); }
 .patient-callout { margin-top: 40px; background: var(--cream); border-radius: var(--radius); padding: 24px 28px; }
 .patient-callout h3 { margin-bottom: .3em; }
 .objectives { background: var(--cream); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 28px; }
