@@ -1,4 +1,8 @@
-"""Generates the course pages src/learn.html and src/learn-mNN.html from the module content in course/modules_*.py.
+"""Generates the course pages in src/ from the module content in course/*.py.
+
+Courses:
+  Root Cause Clinical Course   modules_a.py + modules_b.py -> src/learn.html, src/learn-mNN.html  (/learn/)
+  Wound and Foot Care Course   wound_a.py + wound_b.py     -> src/wound.html, src/wound-mNN.html  (/learn/wound-care/)
 
 Run: python3 course/gen.py && python3 build.py
 """
@@ -8,11 +12,16 @@ import sys
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
-from modules_a import MODULES as A  # noqa: E402
-from modules_b import MODULES as B  # noqa: E402
+import modules_a, modules_b, wound_a, wound_b  # noqa: E402,E401
 
-MODULES = A + B
 SRC = HERE.parent / "src"
+
+COURSES = [
+    dict(key="learn", prefix="learn/", name="Root Cause Clinical Course",
+         modules=modules_a.MODULES + modules_b.MODULES),
+    dict(key="wound", prefix="learn/wound-care/", name="Wound and Foot Care Course",
+         modules=wound_a.MODULES + wound_b.MODULES),
+]
 
 QUIZ_JS = """<script>
 document.querySelectorAll('form.check').forEach(function (f) {
@@ -44,10 +53,12 @@ def quiz(mnum, i, q):
       </form>"""
 
 
-def page(idx, m):
+def page(course, idx, m):
+    mods = course["modules"]
+    pre = course["prefix"]
     n = m["num"]
-    prev_m = MODULES[idx - 1] if idx > 0 else None
-    next_m = MODULES[idx + 1] if idx + 1 < len(MODULES) else None
+    prev_m = mods[idx - 1] if idx > 0 else None
+    next_m = mods[idx + 1] if idx + 1 < len(mods) else None
     nav = "\n".join(f'        <li><a href="#{lid}">{escape(t)}</a></li>' for lid, t, _ in m["lessons"])
     lessons = "\n\n".join(
         f'      <section class="lesson" id="{lid}">\n        <div class="eyebrow">Lesson {k} of {len(m["lessons"])}</div>\n        <h2>{escape(t)}</h2>\n{body}\n      </section>'
@@ -57,19 +68,20 @@ def page(idx, m):
     flags = "\n".join(f"          <li>{p}</li>" for p in m["redflags"])
     quizzes = "\n".join(quiz(n, i, q) for i, q in enumerate(m["quiz"], 1))
     refs = "\n".join(f"          <li>{r}</li>" for r in m["refs"])
-    prev_link = (f'<a class="btn ghost" href="{{base}}learn/{prev_m["slug"]}/">&larr; Module {prev_m["num"]}</a>'
-                 if prev_m else '<a class="btn ghost" href="{base}learn/">All modules</a>')
-    next_link = (f'<a class="btn" href="{{base}}learn/{next_m["slug"]}/">Next: {escape(next_m["title"])} &rarr;</a>'
-                 if next_m else '<a class="btn" href="{base}learn/">Back to all modules</a>')
+    all_link = f'{{base}}{pre}'
+    prev_link = (f'<a class="btn ghost" href="{{base}}{pre}{prev_m["slug"]}/">&larr; Module {prev_m["num"]}</a>'
+                 if prev_m else f'<a class="btn ghost" href="{all_link}">All modules</a>')
+    next_link = (f'<a class="btn" href="{{base}}{pre}{next_m["slug"]}/">Next: {escape(next_m["title"])} &rarr;</a>'
+                 if next_m else f'<a class="btn" href="{all_link}">Back to all modules</a>')
     case_q, case_a = m["case"]
     h_title, h_body = m["handout"]
-    return f"""title: {m["title"]} | Root Cause Clinical Course
-description: {m["summary"]} Module {n} of the free Empowered Health functional medicine course for providers, with a patient handout.
-path: learn/{m["slug"]}/index.html
+    return f"""title: {m["title"]} | {course["name"]}
+description: {m["summary"]} Module {n} of the free Empowered Health {course["name"]} for providers, with a patient handout.
+path: {pre}{m["slug"]}/index.html
 
 <section class="hero small">
   <div class="wrap">
-    <div class="eyebrow" style="color:#cfe6a8">Module {n} of {len(MODULES)} · {len(m["lessons"])} lessons · {m["minutes"]} min</div>
+    <div class="eyebrow" style="color:#cfe6a8">{course["name"]} · Module {n} of {len(mods)} · {len(m["lessons"])} lessons · {m["minutes"]} min</div>
     <h1>{escape(m["title"])}</h1>
   </div>
 </section>
@@ -78,7 +90,7 @@ path: learn/{m["slug"]}/index.html
   <div class="wrap lesson-layout">
     <aside class="lesson-nav">
       <h4>Module {n}</h4>
-      <div class="progress" aria-label="Module {n} of {len(MODULES)}"><span style="width:{round(n / len(MODULES) * 100)}%"></span></div>
+      <div class="progress" aria-label="Module {n} of {len(mods)}"><span style="width:{round(n / len(mods) * 100)}%"></span></div>
       <ol>
 {nav}
       </ol>
@@ -86,7 +98,7 @@ path: learn/{m["slug"]}/index.html
         <li><a href="#review">Case and self-check</a></li>
         <li><a href="#handout">Patient handout</a></li>
       </ul>
-      <p style="margin-top:8px"><a href="{{base}}learn/">&larr; All modules</a></p>
+      <p style="margin-top:8px"><a href="{all_link}">&larr; All modules</a></p>
     </aside>
 
     <article class="prose" style="min-width:0">
@@ -141,7 +153,7 @@ path: learn/{m["slug"]}/index.html
         {next_link}
       </div>
 
-      <p class="disclaimer">General education for licensed clinicians and the public. Not medical advice, and not a substitute for clinical judgment, current guidelines, or a visit with a licensed provider. Drug doses and guidance change; check current labeling and guidelines before prescribing. <a href="{{booking}}" target="_blank" rel="noopener">Book a visit with Empowered Health</a>.</p>
+      <p class="disclaimer">General education for licensed clinicians and the public. Not medical advice, and not a substitute for clinical judgment, current guidelines, or a visit with a licensed provider. Product names are examples, not endorsements. Drug doses, coding rules and guidance change; check current labeling, payer rules and guidelines before acting. <a href="{{booking}}" target="_blank" rel="noopener">Book a visit with Empowered Health</a>.</p>
     </article>
   </div>
 </section>
@@ -149,13 +161,31 @@ path: learn/{m["slug"]}/index.html
 """
 
 
-def index():
-    total = sum(m["minutes"] for m in MODULES)
-    cards = "\n".join(
+def cards(course):
+    return "\n".join(
         f'      <a class="module" href="{m["slug"]}/"><span class="num">Module {m["num"]}</span><h3>{escape(m["title"])}</h3><p>{escape(m["summary"])}</p><span class="meta">{len(m["lessons"])} lessons · {m["minutes"]} min · patient handout</span></a>'
-        for m in MODULES)
-    handouts = "\n".join(
-        f'        <li><a href="{m["slug"]}/#handout">{escape(m["handout"][0])}</a></li>' for m in MODULES)
+        for m in course["modules"])
+
+
+def handout_list(course):
+    return "\n".join(
+        f'        <li><a href="{m["slug"]}/#handout">{escape(m["handout"][0])}</a></li>' for m in course["modules"])
+
+
+def other_course_card(href, eyebrow, title, text, cta):
+    return f"""    <div class="course-cross">
+      <div>
+        <div class="eyebrow">{eyebrow}</div>
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </div>
+      <a class="btn ghost" href="{href}">{cta}</a>
+    </div>"""
+
+
+def learn_index(course, wound):
+    mods = course["modules"]
+    total = sum(m["minutes"] for m in mods)
     return f"""title: Root Cause Clinical Course for Providers | Empowered Health
 description: A free functional medicine course for clinicians from Empowered Health: evidence-based, root-cause care for metabolic, gut, thyroid, hormone, sleep and stress concerns, with patient handouts.
 path: learn/index.html
@@ -164,9 +194,9 @@ path: learn/index.html
   <div class="wrap">
     <div class="eyebrow" style="color:#cfe6a8">Free course for clinicians</div>
     <h1>Root Cause Clinical Course: Functional Medicine for Providers</h1>
-    <p>{len(MODULES)} evidence-focused modules (about {round(total / 60)} hours) for NPs, PAs, physicians and nurses who want to bring root-cause thinking into everyday practice. Every module ends with a plain-language patient handout you can share.</p>
+    <p>{len(mods)} evidence-focused modules (about {round(total / 60)} hours) for NPs, PAs, physicians and nurses who want to bring root-cause thinking into everyday practice. Every module ends with a plain-language patient handout you can share.</p>
     <div class="actions">
-      <a class="btn" href="{MODULES[0]["slug"]}/">Start Module 1</a>
+      <a class="btn" href="{mods[0]["slug"]}/">Start Module 1</a>
       <a class="btn light" href="#patients">I'm a patient</a>
     </div>
   </div>
@@ -174,19 +204,20 @@ path: learn/index.html
 
 <section>
   <div class="wrap">
+{other_course_card("wound-care/", "Also free", "Wound and Foot Care Course", f"{len(wound['modules'])} modules on wound assessment, dressings, compression, offloading, infection, documentation and foot care.", "View the wound care course")}
     <h2>Course modules</h2>
     <p class="lead">Each module has short lessons with workup tables, clinical pearls, red flags for referral, a case, self-check questions, current guideline references, and a printable patient handout. Free, no sign-up, at your own pace.</p>
     <div class="modules">
-{cards}
+{cards(course)}
     </div>
 
     <div id="patients" class="patient-callout">
       <h3>For patients</h3>
       <p>Each module ends with a short handout written for you, in plain language:</p>
       <ul class="handout-list">
-{handouts}
+{handout_list(course)}
       </ul>
-      <p>Questions about your own health? <a href="{{booking}}" target="_blank" rel="noopener">Book a visit with Empowered Health</a>.</p>
+      <p>Looking for wound or foot care information? See the <a href="wound-care/#patients">wound and foot care handouts</a>. Questions about your own health? <a href="{{booking}}" target="_blank" rel="noopener">Book a visit with Empowered Health</a>.</p>
     </div>
     <p class="course-note">This course is for general education. It is not medical advice, does not replace clinical judgment or current guidelines, and does not offer continuing education credit.</p>
   </div>
@@ -194,13 +225,59 @@ path: learn/index.html
 """
 
 
+def wound_index(course, learn):
+    mods = course["modules"]
+    total = sum(m["minutes"] for m in mods)
+    return f"""title: Wound and Foot Care Course for Providers | Empowered Health
+description: A free wound and foot care course for clinicians from Empowered Health: wound types, assessment, dressings, compression, offloading, infection, prevention, documentation and foot care, with patient handouts.
+path: learn/wound-care/index.html
+
+<section class="hero small">
+  <div class="wrap">
+    <div class="eyebrow" style="color:#cfe6a8">Free course for clinicians</div>
+    <h1>Wound and Foot Care Course</h1>
+    <p>{len(mods)} practical modules (about {round(total / 60)} hours) from Heath Tunnell, FNP-BC, CWCN-AP, WCS-C, on assessing, treating and preventing wounds and caring for feet. Every module ends with a plain-language patient handout.</p>
+    <div class="actions">
+      <a class="btn" href="{mods[0]["slug"]}/">Start Module 1</a>
+      <a class="btn light" href="#patients">I'm a patient</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+{other_course_card("../", "Also free", "Root Cause Clinical Course", f"{len(learn['modules'])} modules on functional medicine: nutrition, gut, metabolic health, thyroid, hormones, sleep and labs.", "View the functional medicine course")}
+    <h2>Course modules</h2>
+    <p class="lead">Each module has short lessons with step-by-step how-tos, decision tables, clinical pearls, red flags for referral, a case, self-check questions, references, and a printable patient handout. Free, no sign-up, at your own pace.</p>
+    <div class="modules">
+{cards(course)}
+    </div>
+
+    <div id="patients" class="patient-callout">
+      <h3>For patients and families</h3>
+      <p>Each module ends with a short handout written for you, in plain language:</p>
+      <ul class="handout-list">
+{handout_list(course)}
+      </ul>
+      <p>Need help with a wound or your feet? <a href="{{booking}}" target="_blank" rel="noopener">Book a visit with Empowered Health</a>. If a wound shows signs of spreading infection, such as fever, spreading redness or confusion, get medical care right away.</p>
+    </div>
+    <p class="course-note">This course is for general education. It is not medical advice, does not certify anyone to perform wound or foot care, does not replace clinical judgment, current guidelines or payer rules, and does not offer continuing education credit. Product names are examples, not endorsements.</p>
+  </div>
+</section>
+"""
+
+
 def main():
-    for old in SRC.glob("learn-m*.html"):
-        old.unlink()
-    (SRC / "learn.html").write_text(index())
-    for i, m in enumerate(MODULES):
-        (SRC / f"learn-m{m['num']:02d}.html").write_text(page(i, m))
-    print(f"wrote learn.html and {len(MODULES)} module pages")
+    for pattern in ("learn-m*.html", "wound-m*.html"):
+        for old in SRC.glob(pattern):
+            old.unlink()
+    learn, wound = COURSES
+    (SRC / "learn.html").write_text(learn_index(learn, wound))
+    (SRC / "wound.html").write_text(wound_index(wound, learn))
+    for course in COURSES:
+        for i, m in enumerate(course["modules"]):
+            (SRC / f"{course['key']}-m{m['num']:02d}.html").write_text(page(course, i, m))
+        print(f"{course['name']}: index and {len(course['modules'])} module pages")
 
 
 if __name__ == "__main__":

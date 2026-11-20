@@ -283,3 +283,10 @@ section { padding: 88px 0; }
 .sources ul { font-size: .9rem; color: var(--muted); margin-top: 6px; }
 .handout-list { columns: 2; column-gap: 32px; padding-left: 1.2em; }
 @media (max-width: 640px) { .handout-list { columns: 1; } }
+
+/* Course cross-links */
+.course-cross { display: flex; gap: 20px; align-items: center; justify-content: space-between; flex-wrap: wrap; background: var(--cream); border-radius: var(--radius); padding: 22px 26px; margin-bottom: 40px; }
+.course-cross > div { min-width: 0; flex: 1 1 320px; }
+.course-cross h3 { margin: .2em 0 .3em; }
+.course-cross p { margin: 0; color: var(--muted); }
+.learn-also { margin-top: 18px; font-size: .98rem; color: var(--muted); }

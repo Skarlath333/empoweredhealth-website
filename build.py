@@ -73,6 +73,7 @@ FOOT = """</main>
           <li><a href="{base}#team">Team</a></li>
           <li><a href="{base}#order">Supplements &amp; Labs</a></li>
           <li><a href="{base}learn/">Provider Course</a></li>
+          <li><a href="{base}learn/wound-care/">Wound &amp; Foot Care Course</a></li>
         </ul>
       </div>
       <div>
