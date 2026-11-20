@@ -48,6 +48,7 @@ HEAD = """<!doctype html>
       <a href="{base}hormone-replacement-therapy/">HRT</a>
       <a href="{base}#team">Team</a>
       <a href="{base}#order">Order</a>
+      <a href="{base}learn/">Learn</a>
       <a class="btn" href="{base}#contact">Book online</a>
     </nav>
   </div>
@@ -71,6 +72,7 @@ FOOT = """</main>
           <li><a href="{base}hormone-replacement-therapy/">Hormone Replacement Therapy</a></li>
           <li><a href="{base}#team">Team</a></li>
           <li><a href="{base}#order">Supplements &amp; Labs</a></li>
+          <li><a href="{base}learn/">Provider Course</a></li>
         </ul>
       </div>
       <div>
