@@ -143,7 +143,7 @@ dict(
         "Iron deficiency anemia or chronic diarrhea that hasn't been worked up.",
     ],
     case=("A 34-year-old with bloating and loose stools stopped eating gluten two months ago and feels somewhat better. She asks if she has celiac disease.",
-          "Her current tTG-IgA may be falsely negative because she isn't eating gluten. Options are a gluten challenge (eating gluten daily for several weeks, guided by current guidance) before serology, or HLA-DQ2/DQ8 genetic testing, which can rule celiac disease out if negative. If celiac is excluded, consider IBS and a dietitian-guided low-FODMAP trial."),
+          "Her current tTG-IgA may be falsely negative because she isn't eating gluten. Options are a gluten challenge (eating gluten daily for several weeks, following current guidance) before serology, or HLA-DQ2/DQ8 genetic testing, which can rule celiac disease out if negative. If celiac is excluded, consider IBS and a dietitian-guided low-FODMAP trial."),
     quiz=[
         ("Which test best screens for celiac disease?",
          ["IgG food sensitivity panel", "tTG-IgA with total IgA while eating gluten", "Stool microbiome test"], 1,
@@ -267,7 +267,7 @@ dict(
             ["Triglyceride to HDL ratio", "Higher ratios track with insulin resistance", "Cheap surrogate from a standard lipid panel"],
             ["Fasting insulin and HOMA-IR", "HOMA-IR = glucose (mg/dL) x insulin (uIU/mL) / 405", "No standardized cutoff and assays vary; best for trends"],
         ]) + """
-        <p><strong>Screen early.</strong> The ADA recommends testing all adults starting at age 35, and earlier in adults with overweight plus a risk factor. Check liver health too: metabolic dysfunction-associated steatotic liver disease (MASLD) is common, and a FIB-4 score helps decide who needs elastography.</p>"""),
+        <p><strong>Screen early.</strong> The ADA recommends testing all adults starting at age 35, and earlier in adults with overweight or obesity and a risk factor. Check liver health too: metabolic dysfunction-associated steatotic liver disease (MASLD) is common, and a FIB-4 score helps decide who needs elastography.</p>"""),
         ("lipids", "Lipids beyond LDL", """""" + table(["Test", "What it adds", "Use"], [
             ["ApoB", "Counts atherogenic particles (one ApoB per particle)", "Helpful when triglycerides are high or LDL seems falsely reassuring"],
             ["Lp(a)", "Genetic, mostly fixed risk factor", "Measure once in adulthood; 50 mg/dL (about 125 nmol/L) or higher is a risk enhancer"],
@@ -293,7 +293,7 @@ dict(
         <p>Medication and lifestyle work together. GLP-1 users who keep up protein intake and strength training preserve more muscle, and those who stop the drug usually regain weight unless habits have changed.</p>"""),
     ],
     pearls=[
-        "Triglycerides over 150 with low HDL is an insulin resistance clue on a routine panel.",
+        "Triglycerides over 150 with a low HDL are an insulin resistance clue on a routine panel.",
         "Order Lp(a) once. It is largely genetic, and a high result changes how aggressive you should be with other risk factors.",
         "Use HOMA-IR to track a patient over time, not to diagnose.",
     ],

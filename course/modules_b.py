@@ -17,7 +17,7 @@ dict(
         <ul>
           <li><strong>In women 45 and older</strong> with typical symptoms, diagnosis is clinical. FSH swings widely in perimenopause, so a single value is unreliable.</li>
           <li><strong>Under 40:</strong> evaluate for primary ovarian insufficiency (FSH on two occasions, plus TSH, prolactin and hCG). These patients generally need hormone therapy until the average age of menopause.</li>
-          <li><strong>Contraception</strong> is still needed in perimenopause, until 12 months without periods after 50, or 24 months before 50.</li>
+          <li><strong>Contraception</strong> is still needed in perimenopause, until 12 months without a period for women over 50, or 24 months for women under 50.</li>
           <li><strong>Bleeding after menopause</strong> always needs evaluation of the endometrium.</li>
         </ul>"""),
         ("candidacy", "Candidacy and risks", """        <p>The Menopause Society's 2022 position: for people under 60 or within 10 years of menopause, without contraindications, the benefits of hormone therapy generally outweigh the risks for bothersome vasomotor symptoms and for preventing bone loss.</p>
@@ -261,7 +261,7 @@ dict(
         <p><strong>Tests to avoid:</strong> provoked (chelation challenge) urine heavy metal tests are not valid and are discouraged by medical toxicologists. Urine mycotoxin panels aren't validated for diagnosing illness. Focus on lowering exposure, and test blood lead or PFAS only when there's a specific reason.</p>"""),
     ],
     pearls=[
-        "Ask about home age, water source and hobbies. They find most significant exposures.",
+        "Ask about home age, water source and hobbies. These questions uncover most significant exposures.",
         "Recommend a radon test to every homeowner. Kits are cheap.",
         "Give one or two swaps at a time so advice doesn't turn into fear.",
     ],

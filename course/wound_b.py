@@ -95,7 +95,7 @@ dict(
         <p>Antibiotics treat infection; they don't replace debridement, drainage, offloading or revascularization.</p>"""),
         ("complications", "Stalled wounds, complications and referrals", """""" + table(["Problem", "Likely causes", "What to do"], [
             ["Stalled wound", "Pressure, poor nutrition, weight loss, infection, biofilm, ischemia, edema, wrong diagnosis", "Reassess everything; consider biopsy; change approach after 2 to 4 weeks without progress"],
-            ["Epibole (rolled edges)", "Edges think the wound is closed", "Open the edges: sharp debridement or silver nitrate, then moist healing"],
+            ["Epibole (rolled edges)", "Edges curl under and stop migrating", "Open the edges: sharp debridement or silver nitrate, then moist healing"],
             ["Odor", "Infection, necrotic tissue, anaerobes", "Debride, cleanse with Dakin's, charcoal or cadexomer iodine dressings, topical metronidazole (off-label)"],
             ["Anemia", "Iron, B12 or folate deficiency; chronic disease", "Identify and treat the cause"],
             ["Surgical dehiscence", "Infection, tension, poor nutrition", "Contact the surgeon; close follow-up"],
@@ -107,7 +107,7 @@ dict(
     pearls=[
         "Culture when you see infection, not to \"see what grows.\"",
         "Rising glucose in a diabetic patient with a foot wound can be the first sign of infection.",
-        "Always overestimate healing time when you talk to families, never underestimate it.",
+        "When you talk with families, overestimate healing time rather than underestimate it.",
     ],
     redflags=[
         "Fever, low blood pressure, confusion or rapidly spreading redness: emergency care.",
