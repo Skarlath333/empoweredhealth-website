@@ -262,3 +262,24 @@ section { padding: 88px 0; }
 .case h3 { margin-bottom: .4em; }
 .handout { border: 2px solid var(--leaf); background: var(--white); border-radius: var(--radius); padding: 28px 30px; margin: 40px 0 8px; }
 @media print { .site-header, .site-footer, .lesson-nav, .hero, .lesson-pager, .disclaimer, article > *:not(.handout) { display: none !important; } .handout { border: 0; } .handout .btn { display: none; } }
+
+/* Full course */
+.lesson { padding-top: 8px; margin-bottom: 36px; scroll-margin-top: 90px; }
+.lesson + .lesson { border-top: 1px solid var(--line); padding-top: 32px; }
+.lesson h2 { margin-top: .2em; }
+#review, #handout { scroll-margin-top: 90px; }
+.lesson-extras { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 6px; }
+.lesson-extras a { text-decoration: none; }
+.table-scroll { overflow-x: auto; margin: 18px 0 8px; }
+.table-scroll .lab-table { display: table; margin: 0; min-width: 520px; }
+.pearl ul, .redflags ul, .sources ul { margin: 0; padding-left: 1.2em; }
+.pearl li, .redflags li { margin-bottom: 6px; }
+.case details { margin-top: 10px; }
+.case summary { cursor: pointer; font-family: "Poppins", sans-serif; font-weight: 600; color: var(--green); }
+.case details p { margin: 10px 0 0; }
+.check .result { margin: 12px 0 0; font-weight: 600; }
+.check .result.ok { color: var(--green); }
+.check .result.no { color: var(--orange-dark); }
+.sources ul { font-size: .9rem; color: var(--muted); margin-top: 6px; }
+.handout-list { columns: 2; column-gap: 32px; padding-left: 1.2em; }
+@media (max-width: 640px) { .handout-list { columns: 1; } }
