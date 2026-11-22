@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Patient Tracker | Empowered Health</title>
+<link rel="icon" href="../assets/logo-mark.webp" type="image/webp">
+<style>
+:root{--green:#175f35;--green-dark:#0f4425;--leaf:#83b33d;--orange:#ed8931;--ink:#1f2a24;--muted:#55615a;--cream:#f7f6f1;--line:#e3e6df;--white:#fff;
+--red:#b42318;--red-bg:#fdecea;--amber:#9a5b00;--amber-bg:#fff4e0;--blue:#1d4f91;--blue-bg:#e8f0fb;--ok:#175f35;--ok-bg:#e6f2ea;--grey-bg:#eef0ec}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5;color:var(--ink);background:var(--cream)}
+h1,h2,h3{color:var(--green);line-height:1.2;margin:0 0 .5em}
+h1{font-size:1.5rem}h2{font-size:1.25rem}h3{font-size:1.05rem}
+a{color:var(--green)}
+button,input,select,textarea{font:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+header.bar{background:var(--white);border-bottom:1px solid var(--line)}
+header.bar .wrap{display:flex;align-items:center;gap:12px;min-height:60px;flex-wrap:wrap}
+header.bar img{height:36px;width:auto}
+header.bar .title{font-weight:700;color:var(--green);margin-right:auto}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{background:none;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--muted);font-weight:600}
+.tabs button[aria-selected=true]{background:var(--ok-bg);color:var(--green)}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:600;text-decoration:none}
+.btn:hover{background:var(--green-dark)}
+.btn.secondary{background:var(--white);color:var(--green);border:1px solid var(--line)}
+.btn.secondary:hover{background:var(--grey-bg)}
+.btn.small{padding:4px 10px;font-size:.875rem}
+.btn.danger{background:var(--white);color:var(--red);border:1px solid #f3c4bf}
+main{padding:20px 0 60px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.stat{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 16px;cursor:pointer;text-align:left}
+.stat .n{font-size:1.8rem;font-weight:700;line-height:1.1}
+.stat .l{color:var(--muted);font-size:.9rem}
+.stat.red .n{color:var(--red)}.stat.amber .n{color:var(--amber)}.stat.blue .n{color:var(--blue)}.stat.ok .n{color:var(--ok)}
+.stat[aria-pressed=true]{outline:2px solid var(--green)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar input[type=search]{flex:1;min-width:180px}
+input,select,textarea{border:1px solid #cfd5cc;border-radius:8px;padding:7px 10px;background:#fff;color:var(--ink);width:100%}
+textarea{min-height:64px}
+label{display:block;font-size:.875rem;font-weight:600;color:var(--muted);margin-bottom:10px}
+label input,label select,label textarea{margin-top:3px;font-weight:400}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+td .sub{color:var(--muted);font-size:.85rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:.8rem;font-weight:700;white-space:nowrap}
+.b-overdue{background:var(--red-bg);color:var(--red)}
+.b-soon{background:var(--amber-bg);color:var(--amber)}
+.b-ordered{background:var(--blue-bg);color:var(--blue)}
+.b-ok{background:var(--ok-bg);color:var(--ok)}
+.b-none{background:var(--grey-bg);color:var(--muted)}
+.b-rx{background:var(--red-bg);color:var(--red)}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+td.actions{display:table-cell;text-align:right;white-space:nowrap}
+td.actions .btn{margin-left:4px}
+.stats{margin-top:4px}
+.empty{color:var(--muted);padding:20px 0;text-align:center}
+.plist{display:grid;gap:8px}
+.prow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background:var(--white);border:1px solid var(--line);border-radius:10px;cursor:pointer;text-align:left;width:100%}
+.prow:hover{border-color:var(--leaf)}
+.prow .nm{font-weight:700}
+.prow .meta{color:var(--muted);font-size:.875rem}
+.lockscreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.lockscreen .card{max-width:440px;width:100%}
+.lockscreen img{height:48px;margin-bottom:12px}
+.note{font-size:.875rem;color:var(--muted)}
+.warn{background:var(--amber-bg);border:1px solid #f2d39b;border-radius:8px;padding:10px 12px;font-size:.9rem;margin:10px 0}
+.err{color:var(--red);font-size:.9rem;min-height:1.2em}
+dialog{border:0;border-radius:12px;padding:0;max-width:640px;width:calc(100% - 32px);box-shadow:0 20px 50px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(20,30,25,.45)}
+dialog form{padding:18px}
+dialog .foot{display:flex;gap:8px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+dialog .foot .left{margin-right:auto}
+.check{display:flex;gap:8px;align-items:center;font-weight:600}
+.check input{width:auto;margin:0}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.section-head h2,.section-head h3{margin:0}
+.hidden{display:none!important}
+@media (max-width:720px){
+  table.resp thead{display:none}
+  table.resp tr{display:block;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;padding:6px 10px;background:#fff}
+  table.resp td{display:flex;justify-content:space-between;gap:10px;border:0;padding:5px 0}
+  table.resp td::before{content:attr(data-l);font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase}
+  table.resp td.actions{justify-content:flex-end;display:flex;white-space:normal}
+  table.resp td>*:last-child{text-align:right}
+  table.resp td.actions::before{content:none}
+}
+@media print{
+  header.bar,.toolbar,.stats,.actions,.no-print{display:none!important}
+  body{background:#fff}.card{border:0;padding:0}
+}
+</style>
+</head>
+<body>
+
+<!-- Lock / setup screen -->
+<div id="lock" class="lockscreen">
+  <div class="card">
+    <img src="../assets/logo.webp" alt="Empowered Health">
+    <h1 id="lockTitle">Patient Tracker</h1>
+    <div id="setupBox" class="hidden">
+      <p>Set a passphrase to create your tracker. Your patient list is encrypted with it and saved only in this browser on this computer. Nothing is sent to the website or anywhere else.</p>
+      <div class="warn"><strong>Write the passphrase down somewhere safe.</strong> If it is lost, the data cannot be recovered by anyone.</div>
+      <label>New passphrase (at least 10 characters)<input id="newPass" type="password" autocomplete="new-password"></label>
+      <label>Type it again<input id="newPass2" type="password" autocomplete="new-password"></label>
+      <div class="err" id="setupErr"></div>
+      <button class="btn" id="createBtn">Create tracker</button>
+      <p class="note" style="margin-top:14px">Moving from another computer? <a href="#" id="importFromLock">Restore a backup file</a>.</p>
+    </div>
+    <div id="unlockBox" class="hidden">
+      <p>Enter your passphrase to open the tracker.</p>
+      <label>Passphrase<input id="pass" type="password" autocomplete="current-password"></label>
+      <div class="err" id="unlockErr"></div>
+      <button class="btn" id="unlockBtn">Unlock</button>
+    </div>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <header class="bar">
+    <div class="wrap">
+      <img src="../assets/logo-mark.webp" alt="">
+      <span class="title">Patient Tracker</span>
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-view="due" aria-selected="true">Due list</button>
+        <button role="tab" data-view="patients" aria-selected="false">Patients</button>
+        <button role="tab" data-view="settings" aria-selected="false">Backup &amp; settings</button>
+      </nav>
+      <button class="btn secondary small" id="lockBtn" title="Lock now">Lock</button>
+    </div>
+  </header>
+  <main class="wrap">
+
+    <section id="view-due">
+      <div class="stats" id="stats"></div>
+      <div class="card">
+        <div class="toolbar">
+          <input type="search" id="dueSearch" placeholder="Search patient, medication or lab">
+          <select id="dueType" style="width:auto">
+            <option value="all">Refills and labs</option>
+            <option value="refill">Refills only</option>
+            <option value="lab">Labs only</option>
+          </select>
+          <button class="btn secondary small" onclick="window.print()">Print</button>
+        </div>
+        <table class="resp" id="dueTable">
+          <thead><tr><th>Status</th><th>Patient</th><th>What</th><th>Due</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty hidden" id="dueEmpty"></div>
+      </div>
+    </section>
+
+    <section id="view-patients" class="hidden">
+      <div class="toolbar">
+        <input type="search" id="patSearch" placeholder="Search patients">
+        <button class="btn" id="addPatient">+ Add patient</button>
+      </div>
+      <div class="plist" id="plist"></div>
+      <div class="empty hidden" id="patEmpty">No patients yet. Click <strong>Add patient</strong> to start.</div>
+    </section>
+
+    <section id="view-patient" class="hidden">
+      <p class="no-print"><a href="#" id="backToPatients">&larr; All patients</a></p>
+      <div class="card">
+        <div class="section-head">
+          <h2 id="pName"></h2>
+          <div class="actions"><button class="btn secondary small" id="editPatient">Edit details</button></div>
+        </div>
+        <div id="pInfo" class="note"></div>
+      </div>
+      <div class="card">
+        <div class="section-head"><h3>Medications</h3><button class="btn small" id="addMed">+ Add medication</button></div>
+        <table class="resp" id="medTable">
+          <thead><tr><th>Medication</th><th>Last filled</th><th>Next refill</th><th>Refills left</th><th>Status</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty hidden" id="medEmpty">No medications listed.</div>
+      </div>
+      <div class="card">
+        <div class="section-head"><h3>Labs</h3><button class="btn small" id="addLab">+ Add lab</button></div>
+        <table class="resp" id="labTable">
+          <thead><tr><th>Lab</th><th>Last done</th><th>Next due</th><th>Status</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="empty hidden" id="labEmpty">No labs listed.</div>
+      </div>
+    </section>
+
+    <section id="view-settings" class="hidden">
+      <div class="card">
+        <h2>Back up your data</h2>
+        <p>Your tracker lives only in this browser. Clearing browser data or losing this computer would erase it, so download a backup every week or so. The backup file is encrypted with your passphrase.</p>
+        <div class="actions">
+          <button class="btn" id="exportBtn">Download backup</button>
+          <button class="btn secondary" id="importBtn">Restore from backup</button>
+        </div>
+        <p class="note" id="lastBackup"></p>
+      </div>
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="grid2">
+          <label>Show refills as "Due soon" this many days ahead<input type="number" id="setRefillWin" min="1" max="60"></label>
+          <label>Show labs as "Due soon" this many days ahead<input type="number" id="setLabWin" min="1" max="120"></label>
+          <label>Lock automatically after this many idle minutes<input type="number" id="setIdle" min="1" max="120"></label>
+        </div>
+        <button class="btn" id="saveSettings">Save settings</button>
+        <span class="note" id="settingsSaved"></span>
+      </div>
+      <div class="card">
+        <h2>Change passphrase</h2>
+        <div class="grid2">
+          <label>New passphrase<input type="password" id="chgPass" autocomplete="new-password"></label>
+          <label>Type it again<input type="password" id="chgPass2" autocomplete="new-password"></label>
+        </div>
+        <div class="err" id="chgErr"></div>
+        <button class="btn" id="chgBtn">Change passphrase</button>
+      </div>
+      <div class="card">
+        <h2>How this keeps patient data private</h2>
+        <ul class="note">
+          <li>Everything is encrypted (AES-256) with your passphrase and stored only in this browser. The page is blocked from sending data over the internet.</li>
+          <li>Use it on a computer with a login password and disk encryption (BitLocker on Windows, FileVault on Mac).</li>
+          <li>It locks itself after a few idle minutes. Click <strong>Lock</strong> when you step away.</li>
+          <li>Each computer or browser has its own separate copy. To move it, download a backup and restore it on the other one.</li>
+        </ul>
+        <button class="btn danger small" id="wipeBtn">Erase all tracker data from this browser</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<input type="file" id="importFile" accept=".json,application/json" class="hidden">
+
+<!-- Patient dialog -->
+<dialog id="dlgPatient"><form method="dialog" id="fPatient">
+  <h2 id="dlgPatientTitle">Patient</h2>
+  <div class="grid2">
+    <label>Name<input name="name" required></label>
+    <label>Date of birth<input name="dob" type="date"></label>
+    <label>Phone<input name="phone" type="tel"></label>
+    <label>Email<input name="email" type="email"></label>
+    <label>Preferred pharmacy<input name="pharmacy"></label>
+    <label>Next appointment<input name="nextAppt" type="date"></label>
+  </div>
+  <label>Notes<textarea name="notes"></textarea></label>
+  <div class="foot">
+    <button type="button" class="btn danger left hidden" data-del>Delete patient</button>
+    <button type="button" class="btn secondary" data-cancel>Cancel</button>
+    <button class="btn" value="ok">Save</button>
+  </div>
+</form></dialog>
+
+<!-- Medication dialog -->
+<dialog id="dlgMed"><form method="dialog" id="fMed">
+  <h2>Medication</h2>
+  <div class="grid2">
+    <label>Medication<input name="name" required placeholder="e.g. Testosterone cypionate"></label>
+    <label>Dose and directions<input name="dose" placeholder="e.g. 100 mg weekly"></label>
+    <label>Last filled<input name="lastFill" type="date"></label>
+    <label>Days' supply<input name="daysSupply" type="number" min="1" placeholder="e.g. 30"></label>
+    <label>Refills left on the prescription<input name="refillsLeft" type="number" min="0"></label>
+    <label>Pharmacy (if different)<input name="pharmacy"></label>
+  </div>
+  <label class="check"><input type="checkbox" name="controlled"> Controlled substance</label>
+  <label>Notes (monitoring labs needed, etc.)<textarea name="notes"></textarea></label>
+  <label class="check"><input type="checkbox" name="inactive"> Stopped (hide from the due list)</label>
+  <div class="foot">
+    <button type="button" class="btn danger left hidden" data-del>Delete</button>
+    <button type="button" class="btn secondary" data-cancel>Cancel</button>
+    <button class="btn" value="ok">Save</button>
+  </div>
+</form></dialog>
+
+<!-- Lab dialog -->
+<dialog id="dlgLab"><form method="dialog" id="fLab">
+  <h2>Lab</h2>
+  <div class="grid2">
+    <label>Lab or panel<input name="name" required placeholder="e.g. CBC, PSA, estradiol"></label>
+    <label>Ordered through<select name="source"><option>Fullscript</option><option>Quest</option><option>Rupa</option><option>Ulta Lab Tests</option><option>Other</option></select></label>
+    <label>Last done<input name="lastDone" type="date"></label>
+    <label>Repeat every (months)<input name="everyMonths" type="number" min="0" step="0.5" placeholder="e.g. 3"></label>
+    <label>Or a specific next due date<input name="dueOverride" type="date"></label>
+    <label>Order status<select name="status">
+      <option value="">Not ordered yet</option>
+      <option value="ordered">Ordered, waiting on patient</option>
+      <option value="collected">Drawn, waiting on results</option>
+      <option value="review">Results in, needs review</option>
+    </select></label>
+  </div>
+  <label>Notes<textarea name="notes"></textarea></label>
+  <label class="check"><input type="checkbox" name="inactive"> No longer needed (hide from the due list)</label>
+  <div class="foot">
+    <button type="button" class="btn danger left hidden" data-del>Delete</button>
+    <button type="button" class="btn secondary" data-cancel>Cancel</button>
+    <button class="btn" value="ok">Save</button>
+  </div>
+</form></dialog>
+
+<!-- Refill dialog -->
+<dialog id="dlgRefill"><form method="dialog" id="fRefill">
+  <h2>Record a refill</h2>
+  <p id="refillWhat"></p>
+  <div class="grid2">
+    <label>Date filled<input name="date" type="date" required></label>
+    <label>Days' supply<input name="daysSupply" type="number" min="1" required></label>
+  </div>
+  <label class="check"><input type="checkbox" name="usedRefill" checked> Used one of the remaining refills</label>
+  <div class="foot">
+    <button type="button" class="btn secondary" data-cancel>Cancel</button>
+    <button class="btn" value="ok">Save refill</button>
+  </div>
+</form></dialog>
+
+<!-- Lab done dialog -->
+<dialog id="dlgLabDone"><form method="dialog" id="fLabDone">
+  <h2>Lab completed</h2>
+  <p id="labDoneWhat"></p>
+  <label>Date drawn<input name="date" type="date" required></label>
+  <label>Notes (optional)<textarea name="notes"></textarea></label>
+  <div class="foot">
+    <button type="button" class="btn secondary" data-cancel>Cancel</button>
+    <button class="btn" value="ok">Save</button>
+  </div>
+</form></dialog>
+
+<script>
+(function(){
+"use strict";
+var STORE="eh-tracker-v1", ITER=310000;
+var db=null, key=null, salt=null, idleTimer=null;
+var view="due", currentPid=null, dueFilter="all";
+
+function $(id){return document.getElementById(id)}
+function el(tag,attrs,kids){var e=document.createElement(tag);if(attrs)for(var k in attrs){if(k==="text")e.textContent=attrs[k];else if(k==="cls")e.className=attrs[k];else if(k.slice(0,2)==="on")e.addEventListener(k.slice(2),attrs[k]);else e.setAttribute(k,attrs[k]);}(kids||[]).forEach(function(c){if(c!=null)e.appendChild(typeof c==="string"?document.createTextNode(c):c)});return e}
+function uid(){var a=new Uint8Array(8);crypto.getRandomValues(a);return Array.from(a,function(b){return b.toString(16).padStart(2,"0")}).join("")}
+
+/* ---------- dates ---------- */
+function today(){var d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function parseD(s){if(!s)return null;var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function addDays(d,n){var r=new Date(d);r.setDate(r.getDate()+n);return r}
+function addMonths(d,m){var whole=Math.floor(m),r=new Date(d);var day=r.getDate();r.setDate(1);r.setMonth(r.getMonth()+whole);var last=new Date(r.getFullYear(),r.getMonth()+1,0).getDate();r.setDate(Math.min(day,last));if(m-whole)r=addDays(r,Math.round((m-whole)*30));return r}
+function daysBetween(a,b){return Math.round((b-a)/86400000)}
+function fmt(d){return d?d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"}):"—"}
+function rel(n){if(n===0)return"today";if(n===1)return"tomorrow";if(n===-1)return"yesterday";return n<0?(-n)+" days ago":"in "+n+" days"}
+
+/* ---------- crypto ---------- */
+var enc=new TextEncoder(),dec=new TextDecoder();
+function b64(buf){var s="",a=new Uint8Array(buf);for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
+function unb64(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+function deriveKey(pass,saltBytes){return crypto.subtle.importKey("raw",enc.encode(pass),"PBKDF2",false,["deriveKey"]).then(function(base){return crypto.subtle.deriveKey({name:"PBKDF2",salt:saltBytes,iterations:ITER,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])})}
+function sealWith(k,s,obj){var iv=crypto.getRandomValues(new Uint8Array(12));return crypto.subtle.encrypt({name:"AES-GCM",iv:iv},k,enc.encode(JSON.stringify(obj))).then(function(ct){return{app:"empowered-health-tracker",v:1,iter:ITER,salt:b64(s),iv:b64(iv),ct:b64(ct)}})}
+function openWith(k,blob){return crypto.subtle.decrypt({name:"AES-GCM",iv:unb64(blob.iv)},k,unb64(blob.ct)).then(function(pt){return JSON.parse(dec.decode(pt))})}
+function readStore(){try{var s=localStorage.getItem(STORE);return s?JSON.parse(s):null}catch(e){return null}}
+function save(){return sealWith(key,salt,db).then(function(blob){try{localStorage.setItem(STORE,JSON.stringify(blob))}catch(e){alert("Could not save. Your browser storage may be full or blocked.")}})}
+
+/* ---------- lock / unlock ---------- */
+function showLock(){
+  db=null;key=null;
+  $("app").classList.add("hidden");$("lock").classList.remove("hidden");
+  document.querySelectorAll("dialog[open]").forEach(function(d){d.close()});
+  var has=!!readStore();
+  $("setupBox").classList.toggle("hidden",has);$("unlockBox").classList.toggle("hidden",!has);
+  $("pass").value="";$("unlockErr").textContent="";
+  setTimeout(function(){(has?$("pass"):$("newPass")).focus()},50);
+}
+function enterApp(){
+  $("lock").classList.add("hidden");$("app").classList.remove("hidden");
+  db.settings=Object.assign({refillWindow:7,labWindow:30,idleMinutes:15},db.settings||{});
+  db.patients=db.patients||[];
+  resetIdle();show("due");
+}
+$("createBtn").addEventListener("click",function(){
+  var a=$("newPass").value,b=$("newPass2").value;
+  if(a.length<10){$("setupErr").textContent="Use at least 10 characters.";return}
+  if(a!==b){$("setupErr").textContent="The two passphrases don't match.";return}
+  salt=crypto.getRandomValues(new Uint8Array(16));
+  deriveKey(a,salt).then(function(k){key=k;db={patients:[],settings:{},created:iso(today())};return save()}).then(function(){$("newPass").value=$("newPass2").value="";enterApp()});
+});
+function unlock(){
+  var blob=readStore(),p=$("pass").value;if(!blob||!p)return;
+  $("unlockBtn").disabled=true;$("unlockErr").textContent="Unlocking…";
+  var s=unb64(blob.salt);
+  deriveKey(p,s).then(function(k){return openWith(k,blob).then(function(data){key=k;salt=s;db=data;$("pass").value="";$("unlockErr").textContent="";enterApp()})})
+  .catch(function(){$("unlockErr").textContent="That passphrase didn't work. Try again."})
+  .finally(function(){$("unlockBtn").disabled=false});
+}
+$("unlockBtn").addEventListener("click",unlock);
+$("pass").addEventListener("keydown",function(e){if(e.key==="Enter")unlock()});
+$("newPass2").addEventListener("keydown",function(e){if(e.key==="Enter")$("createBtn").click()});
+$("lockBtn").addEventListener("click",showLock);
+function resetIdle(){clearTimeout(idleTimer);if(!db)return;idleTimer=setTimeout(showLock,(db.settings.idleMinutes||15)*60000)}
+["click","keydown","pointermove","scroll","touchstart"].forEach(function(ev){document.addEventListener(ev,function(){if(db)resetIdle()},{passive:true})});
+
+/* ---------- status logic ---------- */
+function medStatus(m){
+  if(m.inactive)return{key:"none",label:"Stopped",due:null};
+  var last=parseD(m.lastFill),ds=+m.daysSupply;
+  var noRx=m.refillsLeft!==""&&m.refillsLeft!=null&&+m.refillsLeft<=0;
+  if(!last||!ds)return{key:"none",label:"Add fill date",due:null,noRx:noRx};
+  var due=addDays(last,ds),n=daysBetween(today(),due);
+  var r={due:due,days:n,noRx:noRx};
+  if(n<0){r.key="overdue";r.label="Overdue"}
+  else if(n<=db.settings.refillWindow){r.key="soon";r.label="Due soon"}
+  else{r.key="ok";r.label="OK"}
+  return r;
+}
+function labStatus(l){
+  if(l.inactive)return{key:"none",label:"Not needed",due:null};
+  var due=parseD(l.dueOverride);
+  if(!due){var last=parseD(l.lastDone);if(last&&+l.everyMonths>0)due=addMonths(last,+l.everyMonths)}
+  var st={ordered:"Ordered",collected:"Drawn, awaiting results",review:"Results need review"}[l.status];
+  if(l.status==="review")return{key:"overdue",label:st,due:due,days:due?daysBetween(today(),due):null,stage:true};
+  if(st)return{key:"ordered",label:st,due:due,days:due?daysBetween(today(),due):null,stage:true};
+  if(!due)return{key:"none",label:"Not scheduled",due:null};
+  var n=daysBetween(today(),due),r={due:due,days:n};
+  if(n<0){r.key="overdue";r.label="Overdue"}
+  else if(n<=db.settings.labWindow){r.key="soon";r.label="Due soon"}
+  else{r.key="ok";r.label="OK"}
+  return r;
+}
+function badge(key,label){return el("span",{cls:"badge b-"+key,text:label})}
+
+/* ---------- due list ---------- */
+function dueItems(){
+  var items=[];
+  db.patients.forEach(function(p){
+    (p.meds||[]).forEach(function(m){var s=medStatus(m);if(m.inactive)return;
+      if(s.key==="overdue"||s.key==="soon"||s.noRx)items.push({type:"refill",p:p,item:m,s:s});});
+    (p.labs||[]).forEach(function(l){var s=labStatus(l);if(l.inactive)return;
+      if(s.key==="overdue"||s.key==="soon"||s.key==="ordered")items.push({type:"lab",p:p,item:l,s:s});});
+  });
+  var rank={overdue:0,soon:1,ordered:2,ok:3,none:4};
+  items.sort(function(a,b){var r=rank[a.s.key]-rank[b.s.key];if(r)return r;var ad=a.s.due?+a.s.due:Infinity,bd=b.s.due?+b.s.due:Infinity;return ad-bd});
+  return items;
+}
+function renderDue(){
+  var all=dueItems(),q=$("dueSearch").value.trim().toLowerCase(),t=$("dueType").value;
+  var counts={overdue:0,soon:0,ordered:0,norx:0};
+  all.forEach(function(i){if(i.s.key==="overdue")counts.overdue++;else if(i.s.key==="soon")counts.soon++;else if(i.s.key==="ordered")counts.ordered++;if(i.s.noRx)counts.norx++});
+  var stats=$("stats");stats.innerHTML="";
+  [["all","ok",all.length,"Need attention"],["overdue","red",counts.overdue,"Overdue"],["soon","amber",counts.soon,"Due soon"],["ordered","blue",counts.ordered,"Labs in progress"],["norx","red",counts.norx,"Out of refills"]].forEach(function(c){
+    stats.appendChild(el("button",{cls:"stat "+c[1],"aria-pressed":String(dueFilter===c[0]),onclick:function(){dueFilter=(dueFilter===c[0]&&c[0]!=="all")?"all":c[0];renderDue()}},[el("div",{cls:"n",text:String(c[2])}),el("div",{cls:"l",text:c[3]})]));
+  });
+  var rows=all.filter(function(i){
+    if(t!=="all"&&i.type!==t)return false;
+    if(dueFilter==="norx"&&!i.s.noRx)return false;
+    if(dueFilter!=="all"&&dueFilter!=="norx"&&i.s.key!==dueFilter)return false;
+    if(q&&(i.p.name+" "+i.item.name).toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+  var tb=$("dueTable").querySelector("tbody");tb.innerHTML="";
+  rows.forEach(function(i){
+    var st=el("td",{"data-l":"Status"},[badge(i.s.key,i.s.label)]);
+    if(i.s.noRx){st.appendChild(document.createTextNode(" "));st.appendChild(badge("rx","No refills left"))}
+    var what=el("td",{"data-l":"What"},[el("div",null,[(i.type==="refill"?"Refill: ":"Lab: ")+i.item.name]),el("div",{cls:"sub",text:i.type==="refill"?(i.item.dose||""):(i.item.source||"")})]);
+    var due=el("td",{"data-l":"Due"},[el("div",{text:fmt(i.s.due)}),el("div",{cls:"sub",text:i.s.due?rel(i.s.days):""})]);
+    var pt=el("td",{"data-l":"Patient"},[el("a",{href:"#",text:i.p.name,onclick:function(e){e.preventDefault();openPatient(i.p.id)}}),el("div",{cls:"sub",text:i.p.phone||""})]);
+    var act=el("td",{cls:"actions"});
+    if(i.type==="refill")act.appendChild(el("button",{cls:"btn small",text:"Refilled",onclick:function(){refillDialog(i.p,i.item)}}));
+    else{
+      if(!i.item.status)act.appendChild(el("button",{cls:"btn secondary small",text:"Ordered",onclick:function(){i.item.status="ordered";commit()}}));
+      act.appendChild(el("button",{cls:"btn small",text:"Done",onclick:function(){labDoneDialog(i.p,i.item)}}));
+    }
+    tb.appendChild(el("tr",null,[st,pt,what,due,act]));
+  });
+  var empty=$("dueEmpty");
+  $("dueTable").classList.toggle("hidden",!rows.length);empty.classList.toggle("hidden",!!rows.length);
+  empty.textContent=!db.patients.length?"No patients yet. Add them on the Patients tab, with their medications and labs, and anything coming due shows up here.":"Nothing matches. Everyone is up to date for this view.";
+}
+$("dueSearch").addEventListener("input",renderDue);$("dueType").addEventListener("change",renderDue);
+
+/* ---------- patients ---------- */
+function patSummary(p){
+  var worst=null,rank={overdue:0,soon:1,ordered:2,ok:3,none:4};
+  (p.meds||[]).forEach(function(m){var s=medStatus(m);if(!m.inactive&&(worst===null||rank[s.key]<rank[worst]))worst=s.key});
+  (p.labs||[]).forEach(function(l){var s=labStatus(l);if(!l.inactive&&(worst===null||rank[s.key]<rank[worst]))worst=s.key});
+  return worst;
+}
+function renderPatients(){
+  var q=$("patSearch").value.trim().toLowerCase(),list=$("plist");list.innerHTML="";
+  var ps=db.patients.slice().sort(function(a,b){return a.name.localeCompare(b.name)}).filter(function(p){return !q||p.name.toLowerCase().indexOf(q)>=0||(p.phone||"").indexOf(q)>=0});
+  ps.forEach(function(p){
+    var w=patSummary(p),labels={overdue:"Something overdue",soon:"Something due soon",ordered:"Labs in progress",ok:"Up to date",none:"Nothing scheduled"};
+    var meta=(p.meds||[]).filter(function(m){return!m.inactive}).length+" meds · "+(p.labs||[]).filter(function(l){return!l.inactive}).length+" labs"+(p.dob?" · DOB "+fmt(parseD(p.dob)):"");
+    list.appendChild(el("button",{cls:"prow",onclick:function(){openPatient(p.id)}},[el("div",null,[el("div",{cls:"nm",text:p.name}),el("div",{cls:"meta",text:meta})]),w?badge(w,labels[w]):null]));
+  });
+  $("patEmpty").classList.toggle("hidden",db.patients.length>0);
+}
+$("patSearch").addEventListener("input",renderPatients);
+function getP(id){return db.patients.find(function(p){return p.id===id})}
+function openPatient(id){currentPid=id;show("patient")}
+function renderPatient(){
+  var p=getP(currentPid);if(!p){show("patients");return}
+  $("pName").textContent=p.name;
+  var info=[];if(p.dob)info.push("DOB "+fmt(parseD(p.dob)));if(p.phone)info.push(p.phone);if(p.email)info.push(p.email);if(p.pharmacy)info.push("Pharmacy: "+p.pharmacy);if(p.nextAppt)info.push("Next appointment: "+fmt(parseD(p.nextAppt)));
+  var pi=$("pInfo");pi.innerHTML="";pi.appendChild(el("div",{text:info.join(" · ")||"No contact details yet."}));if(p.notes)pi.appendChild(el("div",{text:p.notes,style:"margin-top:6px;white-space:pre-wrap"}));
+  var mt=$("medTable").querySelector("tbody");mt.innerHTML="";
+  (p.meds||[]).forEach(function(m){var s=medStatus(m);
+    var stc=el("td",{"data-l":"Status"},[badge(s.key,s.label)]);if(s.noRx&&!m.inactive){stc.appendChild(document.createTextNode(" "));stc.appendChild(badge("rx","No refills left"))}
+    mt.appendChild(el("tr",null,[
+      el("td",{"data-l":"Medication"},[el("div",null,[m.name+(m.controlled?" (controlled)":"")]),el("div",{cls:"sub",text:m.dose||""})]),
+      el("td",{"data-l":"Last filled",text:fmt(parseD(m.lastFill))}),
+      el("td",{"data-l":"Next refill"},[el("div",{text:fmt(s.due)}),el("div",{cls:"sub",text:s.due?rel(s.days):""})]),
+      el("td",{"data-l":"Refills left",text:(m.refillsLeft===""||m.refillsLeft==null)?"—":String(m.refillsLeft)}),
+      stc,
+      el("td",{cls:"actions"},[m.inactive?null:el("button",{cls:"btn small",text:"Refilled",onclick:function(){refillDialog(p,m)}}),el("button",{cls:"btn secondary small",text:"Edit",onclick:function(){medDialog(p,m)}})])
+    ]));
+  });
+  $("medEmpty").classList.toggle("hidden",(p.meds||[]).length>0);$("medTable").classList.toggle("hidden",!(p.meds||[]).length);
+  var lt=$("labTable").querySelector("tbody");lt.innerHTML="";
+  (p.labs||[]).forEach(function(l){var s=labStatus(l);
+    lt.appendChild(el("tr",null,[
+      el("td",{"data-l":"Lab"},[el("div",{text:l.name}),el("div",{cls:"sub",text:(l.source||"")+(+l.everyMonths>0?" · every "+l.everyMonths+" mo":"")})]),
+      el("td",{"data-l":"Last done",text:fmt(parseD(l.lastDone))}),
+      el("td",{"data-l":"Next due"},[el("div",{text:fmt(s.due)}),el("div",{cls:"sub",text:s.due?rel(s.days):""})]),
+      el("td",{"data-l":"Status"},[badge(s.key,s.label)]),
+      el("td",{cls:"actions"},[l.inactive?null:el("button",{cls:"btn small",text:"Done",onclick:function(){labDoneDialog(p,l)}}),el("button",{cls:"btn secondary small",text:"Edit",onclick:function(){labDialog(p,l)}})])
+    ]));
+  });
+  $("labEmpty").classList.toggle("hidden",(p.labs||[]).length>0);$("labTable").classList.toggle("hidden",!(p.labs||[]).length);
+}
+$("backToPatients").addEventListener("click",function(e){e.preventDefault();show("patients")});
+
+/* ---------- dialogs ---------- */
+function fill(form,obj){Array.from(form.elements).forEach(function(f){if(!f.name)return;if(f.type==="checkbox")f.checked=!!obj[f.name];else f.value=obj[f.name]==null?"":obj[f.name]})}
+function read(form){var o={};Array.from(form.elements).forEach(function(f){if(!f.name)return;o[f.name]=f.type==="checkbox"?f.checked:f.value.trim()});return o}
+function runDialog(dlg,obj,onSave,onDelete){
+  var form=dlg.querySelector("form");form.reset();fill(form,obj||{});
+  var del=form.querySelector("[data-del]");if(del)del.classList.toggle("hidden",!onDelete);
+  form.onsubmit=function(e){e.preventDefault();if(!form.reportValidity())return;onSave(read(form));dlg.close()};
+  form.querySelector("[data-cancel]").onclick=function(){dlg.close()};
+  if(del)del.onclick=function(){if(confirm("Delete this? This can't be undone.")){onDelete();dlg.close()}};
+  dlg.showModal();
+}
+function patientDialog(p){
+  $("dlgPatientTitle").textContent=p?"Edit patient":"Add patient";
+  runDialog($("dlgPatient"),p,function(v){
+    if(p)Object.assign(p,v);else{p=Object.assign({id:uid(),meds:[],labs:[]},v);db.patients.push(p);currentPid=p.id;view="patient"}
+    commit();
+  },p?function(){db.patients=db.patients.filter(function(x){return x.id!==p.id});view="patients";commit()}:null);
+}
+function medDialog(p,m){
+  runDialog($("dlgMed"),m,function(v){if(m)Object.assign(m,v);else p.meds.push(Object.assign({id:uid()},v));commit()},
+    m?function(){p.meds=p.meds.filter(function(x){return x!==m});commit()}:null);
+}
+function labDialog(p,l){
+  runDialog($("dlgLab"),l||{source:"Fullscript"},function(v){if(l)Object.assign(l,v);else p.labs.push(Object.assign({id:uid()},v));commit()},
+    l?function(){p.labs=p.labs.filter(function(x){return x!==l});commit()}:null);
+}
+function refillDialog(p,m){
+  $("refillWhat").textContent=p.name+": "+m.name+(m.dose?" ("+m.dose+")":"");
+  runDialog($("dlgRefill"),{date:iso(today()),daysSupply:m.daysSupply||30,usedRefill:m.refillsLeft!==""&&m.refillsLeft!=null},function(v){
+    m.lastFill=v.date;m.daysSupply=v.daysSupply;
+    if(v.usedRefill&&m.refillsLeft!==""&&m.refillsLeft!=null)m.refillsLeft=Math.max(0,+m.refillsLeft-1);
+    (m.history=m.history||[]).push({date:v.date,days:v.daysSupply});commit();
+  });
+}
+function labDoneDialog(p,l){
+  $("labDoneWhat").textContent=p.name+": "+l.name;
+  runDialog($("dlgLabDone"),{date:iso(today())},function(v){
+    l.lastDone=v.date;l.status="";l.dueOverride="";
+    if(v.notes)l.notes=(l.notes?l.notes+"\n":"")+v.date+": "+v.notes;
+    (l.history=l.history||[]).push({date:v.date});commit();
+  });
+}
+$("addPatient").addEventListener("click",function(){patientDialog(null)});
+$("editPatient").addEventListener("click",function(){patientDialog(getP(currentPid))});
+$("addMed").addEventListener("click",function(){medDialog(getP(currentPid),null)});
+$("addLab").addEventListener("click",function(){labDialog(getP(currentPid),null)});
+
+/* ---------- views ---------- */
+function show(v,keepScroll){
+  view=v;
+  ["due","patients","patient","settings"].forEach(function(n){$("view-"+n).classList.toggle("hidden",n!==v)});
+  document.querySelectorAll(".tabs button").forEach(function(b){b.setAttribute("aria-selected",String(b.dataset.view===v||(v==="patient"&&b.dataset.view==="patients")))});
+  render();if(!keepScroll)window.scrollTo(0,0);
+}
+function render(){
+  if(view==="due")renderDue();else if(view==="patients")renderPatients();else if(view==="patient")renderPatient();else if(view==="settings")renderSettings();
+}
+function commit(){save();if(view==="patient"&&!getP(currentPid))view="patients";show(view,true)}
+document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.view)})});
+
+/* ---------- settings, backup ---------- */
+function renderSettings(){
+  $("setRefillWin").value=db.settings.refillWindow;$("setLabWin").value=db.settings.labWindow;$("setIdle").value=db.settings.idleMinutes;$("settingsSaved").textContent="";
+  $("lastBackup").textContent=db.lastBackup?"Last backup downloaded "+fmt(parseD(db.lastBackup))+".":"No backup downloaded yet.";
+}
+$("saveSettings").addEventListener("click",function(){
+  db.settings.refillWindow=Math.max(1,+$("setRefillWin").value||7);db.settings.labWindow=Math.max(1,+$("setLabWin").value||30);db.settings.idleMinutes=Math.max(1,+$("setIdle").value||15);
+  save();resetIdle();$("settingsSaved").textContent=" Saved.";
+});
+$("exportBtn").addEventListener("click",function(){
+  db.lastBackup=iso(today());
+  sealWith(key,salt,db).then(function(blob){
+    localStorage.setItem(STORE,JSON.stringify(blob));
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(blob)],{type:"application/json"}));
+    a.download="empowered-health-tracker-backup-"+iso(today())+".json";document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1000);renderSettings();
+  });
+});
+var importMode=null;
+$("importBtn").addEventListener("click",function(){importMode="app";$("importFile").value="";$("importFile").click()});
+$("importFromLock").addEventListener("click",function(e){e.preventDefault();importMode="lock";$("importFile").value="";$("importFile").click()});
+$("importFile").addEventListener("change",function(){
+  var f=this.files[0];if(!f)return;
+  f.text().then(function(t){
+    var blob;try{blob=JSON.parse(t)}catch(e){alert("That file isn't a tracker backup.");return}
+    if(!blob||blob.app!=="empowered-health-tracker"||!blob.ct){alert("That file isn't a tracker backup.");return}
+    var p=prompt("Enter the passphrase that was used when this backup was made:");if(!p)return;
+    var s=unb64(blob.salt);
+    deriveKey(p,s).then(function(k){return openWith(k,blob).then(function(data){
+      if(importMode==="app"&&!confirm("Replace everything in this tracker with the backup ("+(data.patients||[]).length+" patients)?"))return;
+      localStorage.setItem(STORE,JSON.stringify(blob));key=k;salt=s;db=data;enterApp();
+    })}).catch(function(){alert("That passphrase didn't open the backup.")});
+  });
+});
+$("chgBtn").addEventListener("click",function(){
+  var a=$("chgPass").value,b=$("chgPass2").value;
+  if(a.length<10){$("chgErr").textContent="Use at least 10 characters.";return}
+  if(a!==b){$("chgErr").textContent="The two passphrases don't match.";return}
+  var s=crypto.getRandomValues(new Uint8Array(16));
+  deriveKey(a,s).then(function(k){key=k;salt=s;return save()}).then(function(){$("chgPass").value=$("chgPass2").value="";$("chgErr").textContent="";alert("Passphrase changed. Older backup files still open with the old passphrase.")});
+});
+$("wipeBtn").addEventListener("click",function(){
+  if(prompt('This deletes every patient in this browser. Type ERASE to confirm.')==="ERASE"){localStorage.removeItem(STORE);showLock()}
+});
+
+if(!window.crypto||!crypto.subtle){document.body.innerHTML="<p style='padding:20px'>This browser can't run the tracker securely. Open it at https://www.empoweredhealthtn.com/tracker/ in an up-to-date Chrome, Edge, Safari or Firefox.</p>";return}
+showLock();
+})();
+</script>
+</body>
+</html>

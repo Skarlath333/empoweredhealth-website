@@ -89,6 +89,7 @@ FOOT = """</main>
     <div class="legal">
       <span>&copy; <span id="yr">2026</span> Empowered Health. All rights reserved.</span>
       <a href="{base}privacy-policy/">Privacy Policy</a>
+      <a href="{base}tracker/" rel="nofollow">Staff</a>
     </div>
   </div>
 </footer>
