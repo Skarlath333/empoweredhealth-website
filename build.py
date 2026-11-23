@@ -43,12 +43,12 @@ HEAD = """<!doctype html>
     <a class="brand" href="{base}"><img src="{base}assets/logo-mark.webp" alt="" width="40" height="40">Empowered Health</a>
     <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" onclick="var n=document.querySelector('.nav');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))"><span></span><span></span><span></span></button>
     <nav class="nav">
-      <a href="{base}#about">About</a>
       <a href="{base}#services">Services</a>
+      <a class="nav-learn" href="{base}learn/">For providers</a>
       <a href="{base}hormone-replacement-therapy/">HRT</a>
+      <a href="{base}#about">About</a>
       <a href="{base}#team">Team</a>
       <a href="{base}#order">Shop</a>
-      <a class="nav-learn" href="{base}learn/">For providers</a>
       <a class="btn" href="{booking}" target="_blank" rel="noopener">Book now</a>
     </nav>
   </div>
