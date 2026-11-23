@@ -31,7 +31,7 @@ HEAD = """<!doctype html>
 <link rel="icon" href="{base}assets/logo-mark.webp" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Rosario:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{base}assets/styles.css">
 <script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"MedicalBusiness","name":"Empowered Health","url":"{site}/","email":"info@empoweredhealthtn.com","telephone":"+1-865-740-9361","description":"A telehealth-only medical practice serving patients across Tennessee.","areaServed":"Tennessee","sameAs":["https://www.facebook.com/EmpoweredHealthTN/"]}}
@@ -40,16 +40,16 @@ HEAD = """<!doctype html>
 <body>
 <header class="site-header">
   <div class="wrap">
-    <a class="brand" href="{base}"><img src="{base}assets/logo.webp" alt="Empowered Health" width="150" height="52"></a>
+    <a class="brand" href="{base}"><img src="{base}assets/logo-mark.webp" alt="" width="40" height="40">Empowered Health</a>
     <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" onclick="var n=document.querySelector('.nav');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))"><span></span><span></span><span></span></button>
     <nav class="nav">
-      <a href="{base}#about">About</a>
       <a href="{base}#services">Services</a>
+      <a class="nav-learn" href="{base}learn/">For providers</a>
       <a href="{base}hormone-replacement-therapy/">HRT</a>
+      <a href="{base}#about">About</a>
       <a href="{base}#team">Team</a>
-      <a href="{base}#order">Order</a>
-      <a href="{base}learn/">Learn</a>
-      <a class="btn" href="{base}#contact">Book online</a>
+      <a href="{base}#order">Shop</a>
+      <a class="btn" href="{booking}" target="_blank" rel="noopener">Book now</a>
     </nav>
   </div>
 </header>
@@ -61,19 +61,25 @@ FOOT = """</main>
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <img class="footer-mark" src="{base}assets/logo-mark.webp" alt="" width="56" height="56">
-        <p>Empowered Health is a telehealth-only medical practice serving patients across Tennessee.</p>
+        <div class="footer-brand"><img src="{base}assets/logo-mark.webp" alt="" width="40" height="40">Empowered Health</div>
+        <p>A telehealth-only medical practice serving patients across Tennessee, and free clinical education for providers.</p>
       </div>
       <div>
-        <h4>Explore</h4>
+        <h4>Patients</h4>
         <ul>
           <li><a href="{base}#about">About</a></li>
           <li><a href="{base}#services">Services</a></li>
           <li><a href="{base}hormone-replacement-therapy/">Hormone Replacement Therapy</a></li>
           <li><a href="{base}#team">Team</a></li>
           <li><a href="{base}#order">Supplements &amp; Labs</a></li>
-          <li><a href="{base}learn/functional-medicine/">Functional Medicine Course</a></li>
-          <li><a href="{base}learn/wound-care/">Wound &amp; Foot Care Course</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Providers</h4>
+        <ul>
+          <li><a href="{base}learn/">All free courses</a></li>
+          <li><a href="{base}learn/functional-medicine/">Root Cause Clinical Course</a></li>
+          <li><a href="{base}learn/wound-care/">Wound and Foot Care Course</a></li>
         </ul>
       </div>
       <div>
@@ -89,6 +95,7 @@ FOOT = """</main>
     <div class="legal">
       <span>&copy; <span id="yr">2026</span> Empowered Health. All rights reserved.</span>
       <a href="{base}privacy-policy/">Privacy Policy</a>
+      <a href="{base}cookie-policy/">Cookie Policy</a>
       <a href="{base}tracker/" rel="nofollow">Staff</a>
     </div>
   </div>
