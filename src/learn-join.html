@@ -35,10 +35,10 @@ path: learn/join/index.html
         </select>
       </div>
       <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
-      <label class="consent"><input type="checkbox" id="consent" name="consent" required><span>I agree that Empowered Health may contact me about the courses and its services. See our <a href="{base}privacy-policy/">Privacy Policy</a>.</span></label>
+      <label class="consent"><input type="checkbox" id="consent" name="consent"><span>Email me occasional news and course updates (optional). You'll get an email to confirm.</span></label>
       <p class="form-error" id="err" role="alert" hidden></p>
       <button class="btn" type="submit" id="go">Get free access</button>
-      <p class="form-note">Please don't include any health information. We never sell your information.</p>
+      <p class="form-note">Please don't include any health information. We never sell your information. See our <a href="{base}privacy-policy/">Privacy Policy</a>.</p>
     </form>
     <aside class="join-aside">
       <h3>What you get</h3>
@@ -55,7 +55,7 @@ path: learn/join/index.html
 
 <script>
 (function () {
-  var SB_URL = "{supabase_url}", SB_KEY = "{supabase_key}";
+  var ENDPOINT = "https://app.tnledgerline.com/api/crm-widget/forms/submit", KEY = "{ledgerline_key}";
   var form = document.getElementById("join"), err = document.getElementById("err"), go = document.getElementById("go");
   function nextUrl() {
     var n = new URLSearchParams(location.search).get("next") || "";
@@ -73,24 +73,26 @@ path: learn/join/index.html
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return fail("Please enter a valid email address.", document.getElementById("email"));
     if (d.phone.replace(/\D/g, "").length < 10) return fail("Please enter a phone number with area code.", document.getElementById("phone"));
-    if (!document.getElementById("consent").checked) return fail("Please check the box to agree before continuing.", document.getElementById("consent"));
-    if (d.website) return;
-    if (!SB_URL || !SB_KEY) return fail("Sign-up isn't connected yet. Please try again later or email info@empoweredhealthtn.com.");
-    var row = { first_name: d.first, last_name: d.last, email: d.email, phone: d.phone, role: d.role, page: nextUrl() };
+    var payload = {
+      key: KEY,
+      data: { first_name: d.first, last_name: d.last, email: d.email, phone: d.phone, role: d.role },
+      consent: document.getElementById("consent").checked,
+      hp: d.website || ""
+    };
     go.disabled = true; go.textContent = "Signing you up…";
-    fetch(SB_URL + "/rest/v1/course_signups", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", apikey: SB_KEY, Prefer: "return=minimal" },
-      body: JSON.stringify(row)
-    })
-      .then(function (r) {
-        if (!r.ok) throw new Error("status " + r.status);
+    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok || !res.j.ok) {
+          var m = res.j && (res.j.message || res.j.error);
+          throw new Error(typeof m === "string" && m ? m : "We couldn't complete your sign-up. Please try again.");
+        }
         try { localStorage.setItem("ehCourseAccess", "1"); } catch (x) {}
         location.href = nextUrl();
       })
-      .catch(function () {
+      .catch(function (x) {
         go.disabled = false; go.textContent = "Get free access";
-        fail("We couldn't complete your sign-up. Please check your details and try again, or email info@empoweredhealthtn.com.");
+        fail(x && x.message && x.message !== "Failed to fetch" ? x.message : "We couldn't reach our sign-up service. Check your connection and try again, or call (865) 740-9361.");
       });
   });
 })();

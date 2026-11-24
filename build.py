@@ -14,11 +14,8 @@ SRC = ROOT / "src"
 OUT = ROOT / "docs"
 SITE_URL = "https://www.empoweredhealthtn.com"
 BOOKING_URL = "https://empoweredhealth.setmore.com"
-# Course sign-ups are saved in Heath's Supabase project (setup: course/supabase-setup.sql).
-# Both values are public by design (Project URL and the "anon public" API key); row-level security
-# lets visitors add a sign-up but only staff accounts read them, on the /signups/ page.
-SUPABASE_URL = ""
-SUPABASE_ANON_KEY = ""
+# Course sign-ups go to Ledgerline (Heath's CRM). This form key is public by design: it can only add sign-ups.
+LEDGERLINE_FORM_KEY = "f_jnxnsCe7Qtzt8V_noksidw"
 # Course pages under learn/ need a sign-up first, except these open pages.
 OPEN_LEARN_PAGES = {"learn/index.html", "learn/join/index.html"}
 GATE = """<script>try{{if(localStorage.getItem("ehCourseAccess")!=="1"){{location.replace("{base}learn/join/?next="+encodeURIComponent(location.pathname+location.hash))}}}}catch(e){{}}</script>
@@ -106,7 +103,6 @@ FOOT = """</main>
       <a href="{base}privacy-policy/">Privacy Policy</a>
       <a href="{base}cookie-policy/">Cookie Policy</a>
       <a href="{base}tracker/" rel="nofollow">Staff</a>
-      <a href="{base}signups/" rel="nofollow">Sign-ups</a>
     </div>
   </div>
 </footer>
@@ -153,7 +149,7 @@ def build():
                    site=SITE_URL, base=base, booking=BOOKING_URL,
                    gate=GATE.format(base=base) if gated else "",
                    robots=f'<meta name="robots" content="{meta["robots"]}">\n' if "robots" in meta else "")
-        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL).replace("{supabase_url}", SUPABASE_URL).replace("{supabase_key}", SUPABASE_ANON_KEY) + FOOT.format(**ctx)
+        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL).replace("{ledgerline_key}", LEDGERLINE_FORM_KEY) + FOOT.format(**ctx)
         out = OUT / path
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html)

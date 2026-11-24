@@ -358,7 +358,6 @@ a.card:hover .icon { background: var(--orange); color: var(--deeper); }
 .join-split { display: grid; grid-template-columns: 1.4fr .8fr; gap: 48px; align-items: start; }
 .join-form { background: var(--white); border: 2px solid var(--line); border-radius: 26px; padding: 34px; display: grid; gap: 18px; min-width: 0; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.row3 { display: grid; grid-template-columns: 1.4fr .8fr .8fr; gap: 16px; }
 .field { display: grid; gap: 6px; min-width: 0; }
 .field label { font: 600 .92rem var(--display); }
 .field input, .field select { font: 500 1rem var(--body); padding: 13px 14px; border: 2px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); width: 100%; }
@@ -373,16 +372,14 @@ a.card:hover .icon { background: var(--orange); color: var(--deeper); }
 .join-aside { background: var(--mist); border-radius: 26px; padding: 30px; display: grid; gap: 14px; }
 .join-aside .ticks { margin: 0; }
 @media (max-width: 900px) { .join-split { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .row2, .row3 { grid-template-columns: 1fr; } .join-form { padding: 24px 18px; } }
+@media (max-width: 600px) { .row2 { grid-template-columns: 1fr; } .join-form { padding: 24px 18px; } }
 
-/* Staff sign-ups page (signups/) */
-.login { max-width: 460px; }
-.su-bar { display: flex; gap: 16px; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; margin-bottom: 12px; }
-.su-search { flex: 1 1 280px; max-width: 420px; }
-.su-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-.su-actions .btn { padding: 12px 18px; }
-.su-count { color: var(--muted); font-weight: 600; }
-.su-table { overflow-x: auto; }
-.su-table .lab-table { display: table; min-width: 760px; }
-.su-del { background: none; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 10px; font: 600 .85rem var(--body); color: var(--muted); cursor: pointer; }
-.su-del:hover { border-color: #c0392b; color: #a5281b; }
+/* Website sign-up form (Ledgerline embed) */
+.signup-card { background: var(--mist); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; }
+.signup-card form { max-width: none !important; font-family: var(--body) !important; }
+.signup-card label { color: var(--ink) !important; font-size: .95rem !important; }
+.signup-card input:not([type=checkbox]) { border-color: var(--line) !important; border-radius: 12px !important; padding: 12px !important; background: var(--white); }
+.signup-card button[type=submit] { background: var(--green) !important; border-radius: 999px !important; padding: 12px 26px !important; font-weight: 700 !important; }
+.signup-card button[type=submit]:hover { background: var(--green-dark) !important; }
+#stay-in-touch .note { color: var(--muted); font-size: .95rem; }
+@media (max-width: 560px) { .signup-card { padding: 22px 18px; } }
