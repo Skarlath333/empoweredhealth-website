@@ -38,7 +38,7 @@ HEAD = """<!doctype html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{base}assets/styles.css">
+<link rel="stylesheet" href="{base}assets/styles.css?v={css_v}">
 {gate}<script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"MedicalBusiness","name":"Empowered Health","url":"{site}/","email":"info@empoweredhealthtn.com","telephone":"+1-865-740-9361","description":"A telehealth-only medical practice serving patients across Tennessee.","areaServed":"Tennessee","sameAs":["https://www.facebook.com/EmpoweredHealthTN/"]}}
 </script>
@@ -129,6 +129,8 @@ REDIRECT = """<!doctype html>
 
 
 def build():
+    import hashlib
+    css_v = hashlib.sha1((OUT / "assets" / "styles.css").read_bytes()).hexdigest()[:8]
     for src in sorted(SRC.glob("*.html")):
         text = src.read_text()
         header, body = text.split("\n\n", 1)
@@ -146,7 +148,7 @@ def build():
         canonical = SITE_URL + "/" + (path[: -len("index.html")] if path.endswith("index.html") else path)
         gated = path.startswith("learn/") and path not in OPEN_LEARN_PAGES
         ctx = dict(title=meta["title"], description=meta["description"], canonical=canonical,
-                   site=SITE_URL, base=base, booking=BOOKING_URL,
+                   site=SITE_URL, base=base, booking=BOOKING_URL, css_v=css_v,
                    gate=GATE.format(base=base) if gated else "",
                    robots=f'<meta name="robots" content="{meta["robots"]}">\n' if "robots" in meta else "")
         html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL).replace("{ledgerline_key}", LEDGERLINE_FORM_KEY) + FOOT.format(**ctx)
