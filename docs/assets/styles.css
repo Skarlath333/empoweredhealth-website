@@ -353,3 +353,13 @@ a.card:hover .icon { background: var(--orange); color: var(--deeper); }
 .cl-title { font-family: var(--display); font-weight: 500; font-size: .98rem; min-width: 0; }
 .cl-meta { font-size: .85rem; color: var(--muted); white-space: nowrap; }
 @media (max-width: 760px) { .class-list { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; } .course-block { padding: 20px; } .cl-meta { display: none; } }
+
+/* Website sign-up form (Ledgerline embed) */
+.signup-card { background: var(--mist); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; }
+.signup-card form { max-width: none !important; font-family: var(--body) !important; }
+.signup-card label { color: var(--ink) !important; font-size: .95rem !important; }
+.signup-card input:not([type=checkbox]) { border-color: var(--line) !important; border-radius: 12px !important; padding: 12px !important; background: var(--white); }
+.signup-card button[type=submit] { background: var(--green) !important; border-radius: 999px !important; padding: 12px 26px !important; font-weight: 700 !important; }
+.signup-card button[type=submit]:hover { background: var(--green-dark) !important; }
+#stay-in-touch .note { color: var(--muted); font-size: .95rem; }
+@media (max-width: 560px) { .signup-card { padding: 22px 18px; } }
