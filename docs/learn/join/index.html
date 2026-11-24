@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign Up for the Free Courses | Empowered Health</title>
+<meta name="description" content="Sign up for free access to the Empowered Health provider courses in functional medicine and wound and foot care.">
+<link rel="canonical" href="https://www.empoweredhealthtn.com/learn/join/">
+<meta property="og:title" content="Sign Up for the Free Courses | Empowered Health">
+<meta property="og:description" content="Sign up for free access to the Empowered Health provider courses in functional medicine and wound and foot care.">
+<meta property="og:url" content="https://www.empoweredhealthtn.com/learn/join/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.empoweredhealthtn.com/assets/logo.webp">
+<link rel="icon" href="../../assets/logo-mark.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/styles.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"MedicalBusiness","name":"Empowered Health","url":"https://www.empoweredhealthtn.com/","email":"info@empoweredhealthtn.com","telephone":"+1-865-740-9361","description":"A telehealth-only medical practice serving patients across Tennessee.","areaServed":"Tennessee","sameAs":["https://www.facebook.com/EmpoweredHealthTN/"]}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../../"><img src="../../assets/logo-mark.webp" alt="" width="40" height="40">Empowered Health</a>
+    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" onclick="var n=document.querySelector('.nav');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))"><span></span><span></span><span></span></button>
+    <nav class="nav">
+      <a href="../../#services">Services</a>
+      <a class="nav-learn" href="../../learn/">For providers</a>
+      <a href="../../hormone-replacement-therapy/">HRT</a>
+      <a href="../../#about">About</a>
+      <a href="../../#team">Team</a>
+      <a href="../../#order">Shop</a>
+      <a class="btn" href="https://empoweredhealth.setmore.com" target="_blank" rel="noopener">Book now</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="hero small">
+  <div class="wrap">
+    <div class="eyebrow">Free provider courses</div>
+    <h1>Sign up to start learning</h1>
+    <p>Tell us a little about yourself to unlock both free courses: 20 classes with patient handouts, at your own pace.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap join-split">
+    <form class="join-form" id="join" novalidate>
+      <div class="row2">
+        <div class="field"><label for="first">First name</label><input id="first" name="first" autocomplete="given-name" required></div>
+        <div class="field"><label for="last">Last name</label><input id="last" name="last" autocomplete="family-name" required></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
+      </div>
+      <div class="field"><label for="street">Street address</label><input id="street" name="street" autocomplete="street-address" required></div>
+      <div class="row3">
+        <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" required></div>
+        <div class="field"><label for="state">State</label><input id="state" name="state" autocomplete="address-level1" required></div>
+        <div class="field"><label for="zip">ZIP code</label><input id="zip" name="zip" autocomplete="postal-code" inputmode="numeric" required></div>
+      </div>
+      <div class="field">
+        <label for="role">Your role</label>
+        <select id="role" name="role" required>
+          <option value="">Choose one</option>
+          <option>Nurse practitioner</option>
+          <option>Physician</option>
+          <option>Physician assistant</option>
+          <option>Nurse</option>
+          <option>Student</option>
+          <option>Patient or family member</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+      <label class="consent"><input type="checkbox" id="consent" name="consent" required><span>I agree that Empowered Health may contact me about the courses and its services. See our <a href="../../privacy-policy/">Privacy Policy</a>.</span></label>
+      <p class="form-error" id="err" role="alert" hidden></p>
+      <button class="btn" type="submit" id="go">Get free access</button>
+      <p class="form-note">Please don't include any health information. We never sell your information.</p>
+    </form>
+    <aside class="join-aside">
+      <h3>What you get</h3>
+      <ul class="ticks">
+        <li>Root Cause Clinical Course (10 classes)</li>
+        <li>Wound and Foot Care Course (10 classes)</li>
+        <li>A printable patient handout for every class</li>
+        <li>Self-checks, cases and references</li>
+      </ul>
+      <p class="form-note">Already signed up on this device? <a href="../../learn/">Go to the courses</a>.</p>
+    </aside>
+  </div>
+</section>
+
+<script>
+(function () {
+  var SIGNUP_URL = "";
+  var form = document.getElementById("join"), err = document.getElementById("err"), go = document.getElementById("go");
+  function nextUrl() {
+    var n = new URLSearchParams(location.search).get("next") || "";
+    return /^\/learn\/[\w\-\/]*(#[\w\-]*)?$/.test(n) ? n : "../../learn/";
+  }
+  function fail(msg, el) { err.textContent = msg; err.hidden = false; if (el) el.focus(); }
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    err.hidden = true;
+    var d = {};
+    new FormData(form).forEach(function (v, k) { d[k] = String(v).trim(); });
+    var req = ["first", "last", "email", "phone", "street", "city", "state", "zip", "role"];
+    for (var i = 0; i < req.length; i++) {
+      if (!d[req[i]]) return fail("Please fill in every field.", document.getElementById(req[i]));
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return fail("Please enter a valid email address.", document.getElementById("email"));
+    if (d.phone.replace(/\D/g, "").length < 10) return fail("Please enter a phone number with area code.", document.getElementById("phone"));
+    if (!document.getElementById("consent").checked) return fail("Please check the box to agree before continuing.", document.getElementById("consent"));
+    if (d.website) return;
+    if (!SIGNUP_URL) return fail("Sign-up isn't connected yet. Please try again later or email info@empoweredhealthtn.com.");
+    var map = { first: "firstname", last: "lastname", email: "email", phone: "phone", street: "address", city: "city", state: "state", zip: "zip", role: "jobtitle" };
+    var fields = Object.keys(map).map(function (k) { return { name: map[k], value: d[k] }; });
+    var payload = {
+      fields: fields,
+      context: { pageUri: location.href, pageName: "Course sign-up" },
+      legalConsentOptions: { consent: { consentToProcess: true, text: "I agree that Empowered Health may contact me about the courses and its services." } }
+    };
+    go.disabled = true; go.textContent = "Signing you up…";
+    fetch(SIGNUP_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function (r) {
+        if (!r.ok) throw new Error("status " + r.status);
+        try { localStorage.setItem("ehCourseAccess", "1"); } catch (x) {}
+        location.href = nextUrl();
+      })
+      .catch(function () {
+        go.disabled = false; go.textContent = "Get free access";
+        fail("We couldn't complete your sign-up. Please check your details and try again, or email info@empoweredhealthtn.com.");
+      });
+  });
+})();
+</script>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><img src="../../assets/logo-mark.webp" alt="" width="40" height="40">Empowered Health</div>
+        <p>A telehealth-only medical practice serving patients across Tennessee, and free clinical education for providers.</p>
+      </div>
+      <div>
+        <h4>Patients</h4>
+        <ul>
+          <li><a href="../../#about">About</a></li>
+          <li><a href="../../#services">Services</a></li>
+          <li><a href="../../hormone-replacement-therapy/">Hormone Replacement Therapy</a></li>
+          <li><a href="../../#team">Team</a></li>
+          <li><a href="../../#order">Supplements &amp; Labs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Providers</h4>
+        <ul>
+          <li><a href="../../learn/">All free courses</a></li>
+          <li><a href="../../learn/functional-medicine/">Root Cause Clinical Course</a></li>
+          <li><a href="../../learn/wound-care/">Wound and Foot Care Course</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://empoweredhealth.setmore.com" target="_blank" rel="noopener">Book an appointment</a></li>
+          <li><a href="tel:+18657409361">(865) 740-9361</a></li>
+          <li><a href="mailto:info@empoweredhealthtn.com">info@empoweredhealthtn.com</a></li>
+          <li><a href="https://www.facebook.com/EmpoweredHealthTN/" target="_blank" rel="noopener">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>&copy; <span id="yr">2026</span> Empowered Health. All rights reserved.</span>
+      <a href="../../privacy-policy/">Privacy Policy</a>
+      <a href="../../cookie-policy/">Cookie Policy</a>
+      <a href="../../tracker/" rel="nofollow">Staff</a>
+    </div>
+  </div>
+</footer>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();
+document.querySelectorAll('.nav a').forEach(function(a){a.addEventListener('click',function(){document.querySelector('.nav').classList.remove('open')})});</script>
+</body>
+</html>

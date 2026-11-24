@@ -14,6 +14,15 @@ SRC = ROOT / "src"
 OUT = ROOT / "docs"
 SITE_URL = "https://www.empoweredhealthtn.com"
 BOOKING_URL = "https://empoweredhealth.setmore.com"
+# Course sign-ups go to HubSpot (free CRM) through its Forms API. Fill in both from the HubSpot form's share/embed code.
+HUBSPOT_PORTAL_ID = ""
+HUBSPOT_FORM_ID = ""
+SIGNUP_URL = (f"https://api.hsforms.com/submissions/v3/integration/submit/{HUBSPOT_PORTAL_ID}/{HUBSPOT_FORM_ID}"
+              if HUBSPOT_PORTAL_ID and HUBSPOT_FORM_ID else "")
+# Course pages under learn/ need a sign-up first, except these open pages.
+OPEN_LEARN_PAGES = {"learn/index.html", "learn/join/index.html"}
+GATE = """<script>try{{if(localStorage.getItem("ehCourseAccess")!=="1"){{location.replace("{base}learn/join/?next="+encodeURIComponent(location.pathname+location.hash))}}}}catch(e){{}}</script>
+"""
 
 HEAD = """<!doctype html>
 <html lang="en">
@@ -33,7 +42,7 @@ HEAD = """<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{base}assets/styles.css">
-<script type="application/ld+json">
+{gate}<script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"MedicalBusiness","name":"Empowered Health","url":"{site}/","email":"info@empoweredhealthtn.com","telephone":"+1-865-740-9361","description":"A telehealth-only medical practice serving patients across Tennessee.","areaServed":"Tennessee","sameAs":["https://www.facebook.com/EmpoweredHealthTN/"]}}
 </script>
 </head>
@@ -138,9 +147,11 @@ def build():
         depth = path.count("/")
         base = meta.get("base") or ("../" * depth if depth else "./")
         canonical = SITE_URL + "/" + (path[: -len("index.html")] if path.endswith("index.html") else path)
+        gated = path.startswith("learn/") and path not in OPEN_LEARN_PAGES
         ctx = dict(title=meta["title"], description=meta["description"], canonical=canonical,
-                   site=SITE_URL, base=base, booking=BOOKING_URL)
-        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL) + FOOT.format(**ctx)
+                   site=SITE_URL, base=base, booking=BOOKING_URL,
+                   gate=GATE.format(base=base) if gated else "")
+        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL).replace("{signup}", SIGNUP_URL) + FOOT.format(**ctx)
         out = OUT / path
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html)

@@ -206,7 +206,7 @@ path: learn/functional-medicine/index.html
   <div class="wrap">
 {other_course_card("../wound-care/", "Also free", "Wound and Foot Care Course", f"{len(wound['modules'])} modules on wound assessment, dressings, compression, offloading, infection, documentation and foot care.", "View the wound care course")}
     <h2>Course modules</h2>
-    <p class="lead">Each module has short lessons with workup tables, clinical pearls, red flags for referral, a case, self-check questions, current guideline references, and a printable patient handout. Free, no sign-up, at your own pace.</p>
+    <p class="lead">Each module has short lessons with workup tables, clinical pearls, red flags for referral, a case, self-check questions, current guideline references, and a printable patient handout. Free with a quick sign-up, at your own pace.</p>
     <div class="modules">
 {cards(course)}
     </div>
@@ -248,7 +248,7 @@ path: learn/wound-care/index.html
   <div class="wrap">
 {other_course_card("../functional-medicine/", "Also free", "Root Cause Clinical Course", f"{len(learn['modules'])} modules on functional medicine: nutrition, gut, metabolic health, thyroid, hormones, sleep and labs.", "View the functional medicine course")}
     <h2>Course modules</h2>
-    <p class="lead">Each module has short lessons with step-by-step how-tos, decision tables, clinical pearls, red flags for referral, a case, self-check questions, references, and a printable patient handout. Free, no sign-up, at your own pace.</p>
+    <p class="lead">Each module has short lessons with step-by-step how-tos, decision tables, clinical pearls, red flags for referral, a case, self-check questions, references, and a printable patient handout. Free with a quick sign-up, at your own pace.</p>
     <div class="modules">
 {cards(course)}
     </div>
@@ -309,9 +309,10 @@ path: learn/index.html
   <div class="wrap">
     <div class="eyebrow" style="color:#cfe6a8">Free courses</div>
     <h1>Learn with Empowered Health</h1>
-    <p>Free classes for nurse practitioners, physicians, PAs and nurses, with plain-language handouts for patients and families. No sign-up, at your own pace.</p>
+    <p>Free classes for nurse practitioners, physicians, PAs and nurses, with plain-language handouts for patients and families. Free with a quick sign-up, at your own pace.</p>
     <div class="actions">
-      <a class="btn" href="#functional-medicine">Functional medicine</a>
+      <a class="btn" href="join/">Sign up free</a>
+      <a class="btn light" href="#functional-medicine">Functional medicine</a>
       <a class="btn light" href="#wound-care">Wound and foot care</a>
     </div>
   </div>
