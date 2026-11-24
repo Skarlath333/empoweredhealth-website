@@ -354,6 +354,26 @@ a.card:hover .icon { background: var(--orange); color: var(--deeper); }
 .cl-meta { font-size: .85rem; color: var(--muted); white-space: nowrap; }
 @media (max-width: 760px) { .class-list { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-flow: row; } .course-block { padding: 20px; } .cl-meta { display: none; } }
 
+/* Course sign-up (learn/join/) */
+.join-split { display: grid; grid-template-columns: 1.4fr .8fr; gap: 48px; align-items: start; }
+.join-form { background: var(--white); border: 2px solid var(--line); border-radius: 26px; padding: 34px; display: grid; gap: 18px; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font: 600 .92rem var(--display); }
+.field input, .field select { font: 500 1rem var(--body); padding: 13px 14px; border: 2px solid var(--line); border-radius: 12px; background: var(--white); color: var(--ink); width: 100%; }
+.field input:focus, .field select:focus { border-color: var(--leaf); outline: none; box-shadow: 0 0 0 3px rgba(131,179,61,.25); }
+.consent { display: flex; gap: 12px; align-items: flex-start; font-size: .95rem; color: var(--muted); }
+.consent input { width: 20px; height: 20px; margin-top: 3px; flex: none; accent-color: var(--green); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.form-error { margin: 0; padding: 12px 16px; border-radius: 12px; background: #fdeee4; color: #8a3d0b; font-weight: 600; }
+.form-note { margin: 0; font-size: .9rem; color: var(--muted); }
+.join-form .btn { justify-self: start; }
+.join-form .btn:disabled { opacity: .7; cursor: wait; transform: none; }
+.join-aside { background: var(--mist); border-radius: 26px; padding: 30px; display: grid; gap: 14px; }
+.join-aside .ticks { margin: 0; }
+@media (max-width: 900px) { .join-split { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .row2 { grid-template-columns: 1fr; } .join-form { padding: 24px 18px; } }
+
 /* Website sign-up form (Ledgerline embed) */
 .signup-card { background: var(--mist); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; }
 .signup-card form { max-width: none !important; font-family: var(--body) !important; }

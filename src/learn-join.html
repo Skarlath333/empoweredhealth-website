@@ -1,0 +1,99 @@
+title: Sign Up for the Free Courses | Empowered Health
+description: Sign up for free access to the Empowered Health provider courses in functional medicine and wound and foot care.
+path: learn/join/index.html
+
+<section class="hero small">
+  <div class="wrap">
+    <div class="eyebrow">Free provider courses</div>
+    <h1>Sign up to start learning</h1>
+    <p>Tell us a little about yourself to unlock both free courses: 20 classes with patient handouts, at your own pace.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap join-split">
+    <form class="join-form" id="join" novalidate>
+      <div class="row2">
+        <div class="field"><label for="first">First name</label><input id="first" name="first" autocomplete="given-name" required></div>
+        <div class="field"><label for="last">Last name</label><input id="last" name="last" autocomplete="family-name" required></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
+      </div>
+      <div class="field">
+        <label for="role">Your role</label>
+        <select id="role" name="role" required>
+          <option value="">Choose one</option>
+          <option>Nurse practitioner</option>
+          <option>Physician</option>
+          <option>Physician assistant</option>
+          <option>Nurse</option>
+          <option>Student</option>
+          <option>Patient or family member</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+      <label class="consent"><input type="checkbox" id="consent" name="consent"><span>Email me occasional news and course updates (optional). You'll get an email to confirm.</span></label>
+      <p class="form-error" id="err" role="alert" hidden></p>
+      <button class="btn" type="submit" id="go">Get free access</button>
+      <p class="form-note">Please don't include any health information. We never sell your information. See our <a href="{base}privacy-policy/">Privacy Policy</a>.</p>
+    </form>
+    <aside class="join-aside">
+      <h3>What you get</h3>
+      <ul class="ticks">
+        <li>Root Cause Clinical Course (10 classes)</li>
+        <li>Wound and Foot Care Course (10 classes)</li>
+        <li>A printable patient handout for every class</li>
+        <li>Self-checks, cases and references</li>
+      </ul>
+      <p class="form-note">Already signed up on this device? <a href="{base}learn/">Go to the courses</a>.</p>
+    </aside>
+  </div>
+</section>
+
+<script>
+(function () {
+  var ENDPOINT = "https://app.tnledgerline.com/api/crm-widget/forms/submit", KEY = "{ledgerline_key}";
+  var form = document.getElementById("join"), err = document.getElementById("err"), go = document.getElementById("go");
+  function nextUrl() {
+    var n = new URLSearchParams(location.search).get("next") || "";
+    return /^\/learn\/[\w\-\/]*(#[\w\-]*)?$/.test(n) ? n : "{base}learn/";
+  }
+  function fail(msg, el) { err.textContent = msg; err.hidden = false; if (el) el.focus(); }
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    err.hidden = true;
+    var d = {};
+    new FormData(form).forEach(function (v, k) { d[k] = String(v).trim(); });
+    var req = ["first", "last", "email", "phone", "role"];
+    for (var i = 0; i < req.length; i++) {
+      if (!d[req[i]]) return fail("Please fill in every field.", document.getElementById(req[i]));
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)) return fail("Please enter a valid email address.", document.getElementById("email"));
+    if (d.phone.replace(/\D/g, "").length < 10) return fail("Please enter a phone number with area code.", document.getElementById("phone"));
+    var payload = {
+      key: KEY,
+      data: { first_name: d.first, last_name: d.last, email: d.email, phone: d.phone, role: d.role },
+      consent: document.getElementById("consent").checked,
+      hp: d.website || ""
+    };
+    go.disabled = true; go.textContent = "Signing you up…";
+    fetch(ENDPOINT, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok || !res.j.ok) {
+          var m = res.j && (res.j.message || res.j.error);
+          throw new Error(typeof m === "string" && m ? m : "We couldn't complete your sign-up. Please try again.");
+        }
+        try { localStorage.setItem("ehCourseAccess", "1"); } catch (x) {}
+        location.href = nextUrl();
+      })
+      .catch(function (x) {
+        go.disabled = false; go.textContent = "Get free access";
+        fail(x && x.message && x.message !== "Failed to fetch" ? x.message : "We couldn't reach our sign-up service. Check your connection and try again, or call (865) 740-9361.");
+      });
+  });
+})();
+</script>

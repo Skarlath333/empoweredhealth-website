@@ -14,6 +14,12 @@ SRC = ROOT / "src"
 OUT = ROOT / "docs"
 SITE_URL = "https://www.empoweredhealthtn.com"
 BOOKING_URL = "https://empoweredhealth.setmore.com"
+# Course sign-ups go to Ledgerline (Heath's CRM). This form key is public by design: it can only add sign-ups.
+LEDGERLINE_FORM_KEY = "f_jnxnsCe7Qtzt8V_noksidw"
+# Course pages under learn/ need a sign-up first, except these open pages.
+OPEN_LEARN_PAGES = {"learn/index.html", "learn/join/index.html"}
+GATE = """<script>try{{if(localStorage.getItem("ehCourseAccess")!=="1"){{location.replace("{base}learn/join/?next="+encodeURIComponent(location.pathname+location.hash))}}}}catch(e){{}}</script>
+"""
 
 HEAD = """<!doctype html>
 <html lang="en">
@@ -22,7 +28,7 @@ HEAD = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{description}">
-<link rel="canonical" href="{canonical}">
+{robots}<link rel="canonical" href="{canonical}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{description}">
 <meta property="og:url" content="{canonical}">
@@ -33,7 +39,7 @@ HEAD = """<!doctype html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{base}assets/styles.css">
-<script type="application/ld+json">
+{gate}<script type="application/ld+json">
 {{"@context":"https://schema.org","@type":"MedicalBusiness","name":"Empowered Health","url":"{site}/","email":"info@empoweredhealthtn.com","telephone":"+1-865-740-9361","description":"A telehealth-only medical practice serving patients across Tennessee.","areaServed":"Tennessee","sameAs":["https://www.facebook.com/EmpoweredHealthTN/"]}}
 </script>
 </head>
@@ -138,9 +144,12 @@ def build():
         depth = path.count("/")
         base = meta.get("base") or ("../" * depth if depth else "./")
         canonical = SITE_URL + "/" + (path[: -len("index.html")] if path.endswith("index.html") else path)
+        gated = path.startswith("learn/") and path not in OPEN_LEARN_PAGES
         ctx = dict(title=meta["title"], description=meta["description"], canonical=canonical,
-                   site=SITE_URL, base=base, booking=BOOKING_URL)
-        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL) + FOOT.format(**ctx)
+                   site=SITE_URL, base=base, booking=BOOKING_URL,
+                   gate=GATE.format(base=base) if gated else "",
+                   robots=f'<meta name="robots" content="{meta["robots"]}">\n' if "robots" in meta else "")
+        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL).replace("{ledgerline_key}", LEDGERLINE_FORM_KEY) + FOOT.format(**ctx)
         out = OUT / path
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html)
