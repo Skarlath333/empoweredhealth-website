@@ -56,12 +56,6 @@
         <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
         <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
       </div>
-      <div class="field"><label for="street">Street address</label><input id="street" name="street" autocomplete="street-address" required></div>
-      <div class="row3">
-        <div class="field"><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" required></div>
-        <div class="field"><label for="state">State</label><input id="state" name="state" autocomplete="address-level1" required></div>
-        <div class="field"><label for="zip">ZIP code</label><input id="zip" name="zip" autocomplete="postal-code" inputmode="numeric" required></div>
-      </div>
       <div class="field">
         <label for="role">Your role</label>
         <select id="role" name="role" required>
@@ -96,7 +90,7 @@
 
 <script>
 (function () {
-  var SIGNUP_URL = "";
+  var SB_URL = "", SB_KEY = "";
   var form = document.getElementById("join"), err = document.getElementById("err"), go = document.getElementById("go");
   function nextUrl() {
     var n = new URLSearchParams(location.search).get("next") || "";
@@ -108,7 +102,7 @@
     err.hidden = true;
     var d = {};
     new FormData(form).forEach(function (v, k) { d[k] = String(v).trim(); });
-    var req = ["first", "last", "email", "phone", "street", "city", "state", "zip", "role"];
+    var req = ["first", "last", "email", "phone", "role"];
     for (var i = 0; i < req.length; i++) {
       if (!d[req[i]]) return fail("Please fill in every field.", document.getElementById(req[i]));
     }
@@ -116,16 +110,14 @@
     if (d.phone.replace(/\D/g, "").length < 10) return fail("Please enter a phone number with area code.", document.getElementById("phone"));
     if (!document.getElementById("consent").checked) return fail("Please check the box to agree before continuing.", document.getElementById("consent"));
     if (d.website) return;
-    if (!SIGNUP_URL) return fail("Sign-up isn't connected yet. Please try again later or email info@empoweredhealthtn.com.");
-    var map = { first: "firstname", last: "lastname", email: "email", phone: "phone", street: "address", city: "city", state: "state", zip: "zip", role: "jobtitle" };
-    var fields = Object.keys(map).map(function (k) { return { name: map[k], value: d[k] }; });
-    var payload = {
-      fields: fields,
-      context: { pageUri: location.href, pageName: "Course sign-up" },
-      legalConsentOptions: { consent: { consentToProcess: true, text: "I agree that Empowered Health may contact me about the courses and its services." } }
-    };
+    if (!SB_URL || !SB_KEY) return fail("Sign-up isn't connected yet. Please try again later or email info@empoweredhealthtn.com.");
+    var row = { first_name: d.first, last_name: d.last, email: d.email, phone: d.phone, role: d.role, page: nextUrl() };
     go.disabled = true; go.textContent = "Signing you up…";
-    fetch(SIGNUP_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+    fetch(SB_URL + "/rest/v1/course_signups", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SB_KEY, Prefer: "return=minimal" },
+      body: JSON.stringify(row)
+    })
       .then(function (r) {
         if (!r.ok) throw new Error("status " + r.status);
         try { localStorage.setItem("ehCourseAccess", "1"); } catch (x) {}
@@ -179,6 +171,7 @@
       <a href="../../privacy-policy/">Privacy Policy</a>
       <a href="../../cookie-policy/">Cookie Policy</a>
       <a href="../../tracker/" rel="nofollow">Staff</a>
+      <a href="../../signups/" rel="nofollow">Sign-ups</a>
     </div>
   </div>
 </footer>

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course Sign-ups | Empowered Health</title>
+<meta name="description" content="Private staff page.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://www.empoweredhealthtn.com/signups/">
+<meta property="og:title" content="Course Sign-ups | Empowered Health">
+<meta property="og:description" content="Private staff page.">
+<meta property="og:url" content="https://www.empoweredhealthtn.com/signups/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.empoweredhealthtn.com/assets/logo.webp">
+<link rel="icon" href="../assets/logo-mark.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"MedicalBusiness","name":"Empowered Health","url":"https://www.empoweredhealthtn.com/","email":"info@empoweredhealthtn.com","telephone":"+1-865-740-9361","description":"A telehealth-only medical practice serving patients across Tennessee.","areaServed":"Tennessee","sameAs":["https://www.facebook.com/EmpoweredHealthTN/"]}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="../"><img src="../assets/logo-mark.webp" alt="" width="40" height="40">Empowered Health</a>
+    <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" onclick="var n=document.querySelector('.nav');n.classList.toggle('open');this.setAttribute('aria-expanded',n.classList.contains('open'))"><span></span><span></span><span></span></button>
+    <nav class="nav">
+      <a href="../#services">Services</a>
+      <a class="nav-learn" href="../learn/">For providers</a>
+      <a href="../hormone-replacement-therapy/">HRT</a>
+      <a href="../#about">About</a>
+      <a href="../#team">Team</a>
+      <a href="../#order">Shop</a>
+      <a class="btn" href="https://empoweredhealth.setmore.com" target="_blank" rel="noopener">Book now</a>
+    </nav>
+  </div>
+</header>
+<main>
+<section class="hero small">
+  <div class="wrap">
+    <div class="eyebrow">Staff only</div>
+    <h1>Course sign-ups</h1>
+    <p>Everyone who signed up for the free provider courses.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <form class="join-form login" id="login" novalidate>
+      <h3 style="margin:0">Staff sign in</h3>
+      <div class="field"><label for="lemail">Email</label><input id="lemail" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="lpass">Password</label><input id="lpass" type="password" autocomplete="current-password" required></div>
+      <p class="form-error" id="lerr" role="alert" hidden></p>
+      <button class="btn" type="submit" id="lgo">Sign in</button>
+    </form>
+
+    <div id="app" hidden>
+      <div class="su-bar">
+        <div class="field su-search"><label for="q">Search</label><input id="q" type="search" placeholder="Name, email, phone or role"></div>
+        <div class="su-actions">
+          <button class="btn" type="button" id="csv">Download for Excel</button>
+          <button class="btn ghost" type="button" id="refresh">Refresh</button>
+          <button class="btn ghost" type="button" id="out">Sign out</button>
+        </div>
+      </div>
+      <p class="su-count" id="count"></p>
+      <div class="su-table">
+        <table class="lab-table">
+          <thead><tr><th>Signed up</th><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>First page</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="form-error" id="aerr" role="alert" hidden></p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var SB_URL = "", SB_KEY = "";
+  var $ = function (id) { return document.getElementById(id); };
+  var KEY = "ehStaffSession", data = [], pendingDelete = null;
+  function session() { try { return JSON.parse(sessionStorage.getItem(KEY) || "null"); } catch (e) { return null; } }
+  function save(s) { try { s ? sessionStorage.setItem(KEY, JSON.stringify(s)) : sessionStorage.removeItem(KEY); } catch (e) {} }
+  function show(err, msg) { err.textContent = msg; err.hidden = !msg; }
+  function api(path, opts) {
+    var s = session();
+    opts = opts || {};
+    opts.headers = Object.assign({ apikey: SB_KEY }, s ? { Authorization: "Bearer " + s.access_token } : {}, opts.headers || {});
+    return fetch(SB_URL + path, opts).then(function (r) {
+      if (r.status === 401) { save(null); render(); throw new Error("Your sign-in expired. Please sign in again."); }
+      if (!r.ok) throw new Error("Something went wrong (" + r.status + "). Please try again.");
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function render() {
+    var signedIn = !!session();
+    $("login").hidden = signedIn; $("app").hidden = !signedIn;
+    if (signedIn) load();
+  }
+  function fmt(t) { var d = new Date(t); return d.toLocaleDateString() + " " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }
+  function draw() {
+    var q = $("q").value.trim().toLowerCase();
+    var list = data.filter(function (r) {
+      return !q || [r.first_name, r.last_name, r.email, r.phone, r.role].join(" ").toLowerCase().indexOf(q) > -1;
+    });
+    $("count").textContent = list.length + " of " + data.length + " sign-ups";
+    var tb = $("rows"); tb.textContent = "";
+    list.forEach(function (r) {
+      var tr = document.createElement("tr");
+      [fmt(r.created_at), r.first_name + " " + r.last_name, r.email, r.phone, r.role, r.page || ""].forEach(function (v, i) {
+        var td = document.createElement("td");
+        if (i === 2) { var a = document.createElement("a"); a.href = "mailto:" + v; a.textContent = v; td.appendChild(a); }
+        else if (i === 3) { var b = document.createElement("a"); b.href = "tel:" + v.replace(/[^\d+]/g, ""); b.textContent = v; td.appendChild(b); }
+        else td.textContent = v;
+        tr.appendChild(td);
+      });
+      var tdx = document.createElement("td"), del = document.createElement("button");
+      del.type = "button"; del.className = "su-del";
+      del.textContent = pendingDelete === r.id ? "Confirm delete" : "Delete";
+      del.addEventListener("click", function () {
+        if (pendingDelete !== r.id) { pendingDelete = r.id; draw(); return; }
+        api("/rest/v1/course_signups?id=eq." + r.id, { method: "DELETE" })
+          .then(function () { pendingDelete = null; data = data.filter(function (x) { return x.id !== r.id; }); draw(); })
+          .catch(function (e) { show($("aerr"), e.message); });
+      });
+      tdx.appendChild(del); tr.appendChild(tdx); tb.appendChild(tr);
+    });
+  }
+  function load() {
+    show($("aerr"), "");
+    api("/rest/v1/course_signups?select=*&order=created_at.desc&limit=10000")
+      .then(function (rows) {
+        data = rows || [];
+        draw();
+        if (!data.length) $("count").textContent = "No sign-ups yet. If you expected some, check that your email is on the staff list in Supabase.";
+      })
+      .catch(function (e) { show($("aerr"), e.message); });
+  }
+  $("login").addEventListener("submit", function (e) {
+    e.preventDefault();
+    show($("lerr"), "");
+    if (!SB_URL || !SB_KEY) return show($("lerr"), "The sign-ups database isn't connected yet.");
+    $("lgo").disabled = true;
+    fetch(SB_URL + "/auth/v1/token?grant_type=password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: SB_KEY },
+      body: JSON.stringify({ email: $("lemail").value.trim(), password: $("lpass").value })
+    }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        $("lgo").disabled = false;
+        if (!res.ok || !res.j.access_token) return show($("lerr"), "That email and password didn't work. Please try again.");
+        $("lpass").value = "";
+        save({ access_token: res.j.access_token });
+        render();
+      })
+      .catch(function () { $("lgo").disabled = false; show($("lerr"), "We couldn't reach the database. Check your connection and try again."); });
+  });
+  $("q").addEventListener("input", draw);
+  $("refresh").addEventListener("click", load);
+  $("out").addEventListener("click", function () { save(null); data = []; render(); });
+  $("csv").addEventListener("click", function () {
+    var cols = ["created_at", "first_name", "last_name", "email", "phone", "role", "page"];
+    var esc = function (v) { v = v == null ? "" : String(v); if (/^[=+\-@]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
+    var csv = [cols.join(",")].concat(data.map(function (r) { return cols.map(function (c) { return esc(r[c]); }).join(","); })).join("\r\n");
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" }));
+    a.download = "course-signups-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  render();
+})();
+</script>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><img src="../assets/logo-mark.webp" alt="" width="40" height="40">Empowered Health</div>
+        <p>A telehealth-only medical practice serving patients across Tennessee, and free clinical education for providers.</p>
+      </div>
+      <div>
+        <h4>Patients</h4>
+        <ul>
+          <li><a href="../#about">About</a></li>
+          <li><a href="../#services">Services</a></li>
+          <li><a href="../hormone-replacement-therapy/">Hormone Replacement Therapy</a></li>
+          <li><a href="../#team">Team</a></li>
+          <li><a href="../#order">Supplements &amp; Labs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Providers</h4>
+        <ul>
+          <li><a href="../learn/">All free courses</a></li>
+          <li><a href="../learn/functional-medicine/">Root Cause Clinical Course</a></li>
+          <li><a href="../learn/wound-care/">Wound and Foot Care Course</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="https://empoweredhealth.setmore.com" target="_blank" rel="noopener">Book an appointment</a></li>
+          <li><a href="tel:+18657409361">(865) 740-9361</a></li>
+          <li><a href="mailto:info@empoweredhealthtn.com">info@empoweredhealthtn.com</a></li>
+          <li><a href="https://www.facebook.com/EmpoweredHealthTN/" target="_blank" rel="noopener">Facebook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="legal">
+      <span>&copy; <span id="yr">2026</span> Empowered Health. All rights reserved.</span>
+      <a href="../privacy-policy/">Privacy Policy</a>
+      <a href="../cookie-policy/">Cookie Policy</a>
+      <a href="../tracker/" rel="nofollow">Staff</a>
+      <a href="../signups/" rel="nofollow">Sign-ups</a>
+    </div>
+  </div>
+</footer>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();
+document.querySelectorAll('.nav a').forEach(function(a){a.addEventListener('click',function(){document.querySelector('.nav').classList.remove('open')})});</script>
+</body>
+</html>

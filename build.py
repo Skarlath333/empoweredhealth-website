@@ -14,11 +14,11 @@ SRC = ROOT / "src"
 OUT = ROOT / "docs"
 SITE_URL = "https://www.empoweredhealthtn.com"
 BOOKING_URL = "https://empoweredhealth.setmore.com"
-# Course sign-ups go to HubSpot (free CRM) through its Forms API. Fill in both from the HubSpot form's share/embed code.
-HUBSPOT_PORTAL_ID = ""
-HUBSPOT_FORM_ID = ""
-SIGNUP_URL = (f"https://api.hsforms.com/submissions/v3/integration/submit/{HUBSPOT_PORTAL_ID}/{HUBSPOT_FORM_ID}"
-              if HUBSPOT_PORTAL_ID and HUBSPOT_FORM_ID else "")
+# Course sign-ups are saved in Heath's Supabase project (setup: course/supabase-setup.sql).
+# Both values are public by design (Project URL and the "anon public" API key); row-level security
+# lets visitors add a sign-up but only staff accounts read them, on the /signups/ page.
+SUPABASE_URL = ""
+SUPABASE_ANON_KEY = ""
 # Course pages under learn/ need a sign-up first, except these open pages.
 OPEN_LEARN_PAGES = {"learn/index.html", "learn/join/index.html"}
 GATE = """<script>try{{if(localStorage.getItem("ehCourseAccess")!=="1"){{location.replace("{base}learn/join/?next="+encodeURIComponent(location.pathname+location.hash))}}}}catch(e){{}}</script>
@@ -31,7 +31,7 @@ HEAD = """<!doctype html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{description}">
-<link rel="canonical" href="{canonical}">
+{robots}<link rel="canonical" href="{canonical}">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{description}">
 <meta property="og:url" content="{canonical}">
@@ -106,6 +106,7 @@ FOOT = """</main>
       <a href="{base}privacy-policy/">Privacy Policy</a>
       <a href="{base}cookie-policy/">Cookie Policy</a>
       <a href="{base}tracker/" rel="nofollow">Staff</a>
+      <a href="{base}signups/" rel="nofollow">Sign-ups</a>
     </div>
   </div>
 </footer>
@@ -150,8 +151,9 @@ def build():
         gated = path.startswith("learn/") and path not in OPEN_LEARN_PAGES
         ctx = dict(title=meta["title"], description=meta["description"], canonical=canonical,
                    site=SITE_URL, base=base, booking=BOOKING_URL,
-                   gate=GATE.format(base=base) if gated else "")
-        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL).replace("{signup}", SIGNUP_URL) + FOOT.format(**ctx)
+                   gate=GATE.format(base=base) if gated else "",
+                   robots=f'<meta name="robots" content="{meta["robots"]}">\n' if "robots" in meta else "")
+        html = HEAD.format(**ctx) + body.replace("{base}", base).replace("{booking}", BOOKING_URL).replace("{supabase_url}", SUPABASE_URL).replace("{supabase_key}", SUPABASE_ANON_KEY) + FOOT.format(**ctx)
         out = OUT / path
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html)
